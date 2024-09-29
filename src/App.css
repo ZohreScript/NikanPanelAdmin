@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebBlack.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebBlack.woff') format('woff');
+    font-weight: 900; /* Black */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebBold.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebBold.woff') format('woff');
+    font-weight: 700; /* Bold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebExtraBlack.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebExtraBlack.woff') format('woff');
+    font-weight: 800; /* Extra Black */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebExtraBold.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebExtraBold.woff') format('woff');
+    font-weight: 800; /* Extra Bold */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebLight.woff2') format('woff2'),
+         url('/fonts/IRANYekanWebLight.woff') format('woff');
+    font-weight: 300; /* Light */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebMedium.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebMedium.woff') format('woff');
+    font-weight: 500; /* Medium */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebRegular.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebRegular.woff') format('woff');
+    font-weight: 400; /* Regular */
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'IRANYekan';
+    src: url('../public/fonts/IRANYekanWebThin.woff2') format('woff2'),
+         url('../public/fonts/IRANYekanWebThin.woff') format('woff');
+    font-weight: 100; /* Thin */
+    font-style: normal;
+  }
+  
