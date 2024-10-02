@@ -1,52 +1,54 @@
-// src/context/AppContext.tsx
-
-import { createContext, useContext, useReducer, ReactNode } from "react";
-import PropTypes from "prop-types";
-import appReducer from "./appReducer" 
+import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import appReducer from "./appReducer";
 
 // Define the shape of the state
-export interface AppState {
+interface AppState {
   showSidebar: boolean;
 }
 
-// Define the action types
-interface ToggleSidebarAction {
-  type: 'TOGGLE_SIDEBAR';
+// Define action types
+type AppAction = { type: 'TOGGLE_SIDEBAR' };
+
+// Define context value type
+interface AppContextType extends AppState {
+  toggleSidebar: () => void;
 }
 
-export type AppAction = ToggleSidebarAction; // Add more actions as needed
+// Create the context with a default value
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const AppContext = createContext<{ state: AppState; toggleSidebar: () => void } | undefined>(undefined);
-
+// Define initial state
 const initialState: AppState = {
   showSidebar: true,
 };
 
-export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(appReducer, initialState);
+// AppProvider component props type
+interface AppProviderProps {
+  children: ReactNode;
+}
+
+// AppProvider component
+const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  const [state, dispatch] = useReducer<React.Reducer<AppState, AppAction>>(appReducer, initialState);
 
   const toggleSidebar = () => {
     dispatch({ type: 'TOGGLE_SIDEBAR' });
   };
 
   return (
-    <AppContext.Provider value={{ state, toggleSidebar }}>
+    <AppContext.Provider value={{ ...state, toggleSidebar }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-export const useAppContext = () => {
+// Hook to use the AppContext
+const useAppContext = (): AppContextType => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
 };
 
-// PropTypes for runtime validation
-// This will work, but you might want to consider using TypeScript types instead
-// PropTypes is optional when using TypeScript
-AppProvider.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+export { useAppContext, AppProvider };

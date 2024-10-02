@@ -1,15 +1,23 @@
+// src/App.tsx
+import './App.css';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
+import { useUserMenu } from './hooks/useUserMenu';
+import { useEffect, useState } from 'react';
 
-import './App.css'
+const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const { data: fetchedMenuItems, isLoading, error } = useUserMenu(isAuthenticated);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
-function App() {
+  // Loading and error handling for fetching menu items
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading menu</div>;
 
-  return (
-    <>
-   
-      <h1>Vite + React</h1>
-     
-    </>
-  )
-}
+  return <RouterProvider router={router(isAuthenticated, fetchedMenuItems || [])} />;
+};
 
-export default App
+export default App;

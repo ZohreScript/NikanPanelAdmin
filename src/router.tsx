@@ -2,7 +2,7 @@
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom';
 import MainLayout from './Layout/MainLayout/MainLayout';
 import IdentityLayout from './Layout/identity-layout';
-import Login from './features/Identity/login/login';
+import Login from './features/Identity/Login';
 import NotFound from './features/NotFound';
 import CardexRegister from './features/Cardex/CardexRegister';
 import SettingEhzarRfid from './features/Setting/SettingEhzarRfid';
@@ -23,16 +23,10 @@ import AccessRoll from './features/Access/AccessRoll';
 import AccessPermission from './features/Access/AccessPermission';
 import Dashboard from './features/Dashboard/Dashboard';
 import Ehzar from './features/EhzarNurse/Ehzar';
+import { MenuItem } from './types/types'; // Import the MenuItem type
 
-// Type definition for menu items
-interface MenuItem {
-  url: string;
-  subMenus?: MenuItem[];
-}
-
-// Map API menu names to React components
 const componentMapping: Record<string, JSX.Element> = {
-  '': <Dashboard />,
+  '': <Dashboard/>,
   'ehzar': <Ehzar />,
   'cardex/register': <CardexRegister />,
   'setting/ehzar/rfid': <SettingEhzarRfid />,
@@ -53,17 +47,16 @@ const componentMapping: Record<string, JSX.Element> = {
   'access/Permission': <AccessPermission />,
 };
 
-// Function to create routes from menu items
 const createRoutesFromMenu = (menuItems: MenuItem[]): RouteObject[] => {
   return (
-    menuItems?.map((item) => {
-      const parentPath = item.url?.replace(/^\//, '');
+    menuItems.map((item) => {
+      const parentPath = item.url.replace(/^\//, '');
 
       if (item.subMenus && item.subMenus.length > 0) {
         return {
           path: parentPath,
           children: item.subMenus.map((subMenu) => {
-            const subMenuPath = subMenu.url?.replace(/^\//, '');
+            const subMenuPath = subMenu.url.replace(/^\//, '');
             return {
               path: subMenuPath,
               element: componentMapping[subMenuPath] || <NotFound />,
@@ -83,23 +76,22 @@ const createRoutesFromMenu = (menuItems: MenuItem[]): RouteObject[] => {
   );
 };
 
-// Router setup function
-const router = (menuItems: MenuItem[]) =>
+const router = (isAuthenticated: boolean, menuItems: MenuItem[]) => 
   createBrowserRouter([
     {
       path: '/',
       element: <IdentityLayout />,
       children: [
-        { path: '/', element: <Navigate to="/login" replace /> },
+        { path: '/', element: isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace /> },
         { path: 'login', element: <Login /> },
       ],
     },
     {
-      element: <MainLayout />,
+      element: isAuthenticated ? <MainLayout /> : <Navigate to="/login" replace />,
       children: [
         { path: '/dashboard', element: <Dashboard /> },
         ...createRoutesFromMenu(menuItems),
-        { path: '*', element: <NotFound /> }, // Catch-all for undefined routes
+        { path: '*', element: <NotFound /> },
       ],
     },
   ]);

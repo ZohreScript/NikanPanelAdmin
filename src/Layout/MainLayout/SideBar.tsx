@@ -18,7 +18,6 @@ interface MenuItem {
 const SideBar = () => {
   const { showSidebar } = useAppContext();
 
-  // Add the type for the menuItems to be an array of MenuItem objects
   const { data: menuItems, isLoading, error } = useUserMenu<MenuItem[]>();
 
   if (isLoading) return <p>Loading...</p>;

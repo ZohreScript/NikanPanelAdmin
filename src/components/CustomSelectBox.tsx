@@ -1,24 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa'; // Import icons for open/close
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 interface CustomSelectBoxProps {
-  options: string[]; // Array of string options
-  defaultOption: string; // Default selected option
-  onChange: (option: string) => void; // Callback when an option is selected
+  options: string[]; 
+  defaultOption: string; 
+  onChange?: (option: string) => void; 
 }
 
 const CustomSelectBox: React.FC<CustomSelectBoxProps> = ({ options, defaultOption, onChange }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>(defaultOption);
-  const selectBoxRef = useRef<HTMLDivElement | null>(null); // To reference the select box
+  const selectBoxRef = useRef<HTMLDivElement | null>(null); 
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    onChange(option); // Call the onChange prop when an option is selected
     setIsOpen(false);
+    if (onChange) onChange(option); 
   };
 
-  // Close the dropdown when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (selectBoxRef.current && !selectBoxRef.current.contains(event.target as Node)) {
@@ -48,7 +47,6 @@ const CustomSelectBox: React.FC<CustomSelectBoxProps> = ({ options, defaultOptio
         {selectedOption}
       </div>
 
-      {/* Option list */}
       {isOpen && (
         <ul className="absolute text-sm mt-1 text-right w-full text-gray-600 bg-white border border-gray-300 rounded-lg shadow-lg z-10 min-w-32">
           {options.map((option) => (

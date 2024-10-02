@@ -1,21 +1,22 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../Services/HttpService';
 
 // Define types for the login data and response
 interface LoginData {
-  username: string; // Ensure this matches the object structure
+  userName: string; 
   password: string;
+  logintype: number;
 }
 
 interface LoginResponse {
   item: {
     token: string;
-    // Include other properties from the response as needed
   };
 }
 
-export const useLogin = () => {
+// Define the useLogin hook with proper return type
+export const useLogin = (): UseMutationResult<LoginResponse, Error, LoginData> => {
   const navigate = useNavigate();
 
   return useMutation<LoginResponse, Error, LoginData>({

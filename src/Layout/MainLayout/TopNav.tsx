@@ -1,30 +1,31 @@
-import { FaBars, FaTimes } from "react-icons/fa";
-import { useAppContext } from "../../context/app/App-context";
-import CustomSelectBox from "../../components/CustomSelectBox";
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { useAppContext } from '../../context/app/App-context';
+import CustomSelectBox from '../../components/CustomSelectBox';
 
-const part = ["همه", "بخش یک", "بخش دو", "بخش سه", "بخش چهار"];
-const mounth = [
-  "فروردین",
-  "اردیبهشت",
-  "خرداد",
-  "تیر",
-  "مرداد",
-  "شهریور",
-  "مهر",
-  "آبان",
-  "آذر",
-  "دی",
-  "بهمن",
-  "اسفند",
+// Define the arrays with types
+const part: string[] = ['همه', 'بخش یک', 'بخش دو', 'بخش سه', 'بخش چهار'];
+const mounth: string[] = [
+  'فروردین',
+  'اردیبهشت',
+  'خرداد',
+  'تیر',
+  'مرداد',
+  'شهریور',
+  'مهر',
+  'آبان',
+  'آذر',
+  'دی',
+  'بهمن',
+  'اسفند',
 ];
 
-const TopNav  = () => {
+const TopNav: React.FC = () => {
   const { showSidebar, toggleSidebar } = useAppContext();
-  
+
   const handleLogout = () => {
-    console.log("User logged out");
-    localStorage.removeItem("user");
-    window.location.href = "/login";
+    console.log('User logged out');
+    localStorage.removeItem('token');
+    window.location.href = '/login';
   };
 
   return (
@@ -61,7 +62,7 @@ const TopNav  = () => {
                 dir="rtl"
                 tabIndex={0}
                 className="menu menu-sm dropdown-content gap-y-2 bg-white border border-gray-300 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-                style={{ textAlign: "right" }}
+                style={{ textAlign: 'right' }}
               >
                 <li className="flex justify-end">
                   <a className="text-right w-full">پروفایل</a>
