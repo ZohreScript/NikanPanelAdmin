@@ -24,7 +24,7 @@ const TopNav: React.FC = () => {
 
   const handleLogout = () => {
     console.log('User logged out');
-    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     window.location.href = '/login';
   };
 
