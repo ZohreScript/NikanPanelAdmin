@@ -13,7 +13,6 @@ const App: React.FC = () => {
     setIsAuthenticated(!!token);
   }, []);
 
-  // Loading and error handling for fetching menu items
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading menu</div>;
 
