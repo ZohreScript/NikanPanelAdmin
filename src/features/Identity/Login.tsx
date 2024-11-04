@@ -1,6 +1,8 @@
 import React from 'react';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useLogin } from "../../hooks/useLogin";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 // Define the shape of the form data
 interface LoginForm {
@@ -11,7 +13,8 @@ interface LoginForm {
 const Login: React.FC = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
   const { mutate, isPending } = useLogin(); 
-
+  const navigate = useNavigate();
+  useAuth(navigate);
   const onSubmit: SubmitHandler<LoginForm> = (data) => {
     const loginData = { userName: data.username, password: data.password, logintype: 1 };
     mutate(loginData); 

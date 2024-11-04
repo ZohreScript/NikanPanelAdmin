@@ -1,10 +1,18 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 const AUTH_BASE_URL = "http://93.118.144.59:8003/api/v1";
+const WARD_BASE_URL = "http://93.118.144.59:8002/api/v1";
 
 export const authService = axios.create({
   baseURL: AUTH_BASE_URL,
 });
+
+export const wardService = axios.create({
+  baseURL: WARD_BASE_URL,
+});
+
+
+
 
 // Request interceptor to add token to headers
 authService.interceptors.request.use(
@@ -24,8 +32,8 @@ authService.interceptors.response.use(
   async (error: AxiosError) => {
     if (error.response && error.response.status === 401) {
       console.log("Unauthorized - clearing token");
-      localStorage.removeItem("token"); // Clear token on unauthorized
-      window.location.href = "/login"; // Redirect to login
+      localStorage.removeItem("token"); 
+      window.location.href = "/login"; 
     }
     return Promise.reject(error);
   }

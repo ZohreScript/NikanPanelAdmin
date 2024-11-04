@@ -1,33 +1,31 @@
 import React, { createContext, useContext, useReducer, ReactNode } from "react";
 import appReducer from "./appReducer";
 
-// Define the shape of the state
 interface AppState {
   showSidebar: boolean;
+  isAuthenticated: boolean;
 }
 
-// Define action types
-type AppAction = { type: 'TOGGLE_SIDEBAR' };
+type AppAction = 
+  | { type: 'TOGGLE_SIDEBAR' } 
+  | { type: 'SET_AUTHENTICATED', payload: boolean };
 
-// Define context value type
 interface AppContextType extends AppState {
   toggleSidebar: () => void;
+  setAuthenticated: (isAuthenticated: boolean) => void;
 }
 
-// Create the context with a default value
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-// Define initial state
 const initialState: AppState = {
   showSidebar: true,
+  isAuthenticated: false,
 };
 
-// AppProvider component props type
 interface AppProviderProps {
   children: ReactNode;
 }
 
-// AppProvider component
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer<React.Reducer<AppState, AppAction>>(appReducer, initialState);
 
@@ -35,14 +33,17 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     dispatch({ type: 'TOGGLE_SIDEBAR' });
   };
 
+  const setAuthenticated = (isAuthenticated: boolean) => {
+    dispatch({ type: 'SET_AUTHENTICATED', payload: isAuthenticated });
+  };
+
   return (
-    <AppContext.Provider value={{ ...state, toggleSidebar }}>
+    <AppContext.Provider value={{ ...state, toggleSidebar, setAuthenticated }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-// Hook to use the AppContext
 const useAppContext = (): AppContextType => {
   const context = useContext(AppContext);
   if (!context) {
@@ -51,4 +52,4 @@ const useAppContext = (): AppContextType => {
   return context;
 };
 
-export { useAppContext, AppProvider };
+export { useAppContext, AppProvider, type AppAction, type AppState };

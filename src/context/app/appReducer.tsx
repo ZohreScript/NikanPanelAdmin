@@ -1,6 +1,4 @@
-// src/reducers/app-reducer.ts
-
-import { AppState, AppAction } from './App-context'; // Adjust the path based on your directory structure
+import { AppState, AppAction } from './App-context';
 
 const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
@@ -8,6 +6,11 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
       return {
         ...state,
         showSidebar: !state.showSidebar,
+      };
+    case 'SET_AUTHENTICATED':
+      return {
+        ...state,
+        isAuthenticated: action.payload,
       };
     default:
       return state;
