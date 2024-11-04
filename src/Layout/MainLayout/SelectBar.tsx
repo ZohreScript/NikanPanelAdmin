@@ -3,11 +3,12 @@ import CustomSelectBox from "../../components/CustomSelectBox";
 
 type SelectBarProps = {
   yearOptions: string[];
-  monthOptions: string[];
+ monthOptions: { label: string; value?: number }[];
   wardOptions: string[];
   isLoadingWards: boolean;
-  onYearChange: () => void;
-  onMonthChange: () => void;
+  onYearChange: (year: string) => void;
+  onMonthChange: (month: string) => void;
+  onWardChange: (ward: string) => void;
 };
 
 const SelectBar: React.FC<SelectBarProps> = ({
@@ -17,6 +18,7 @@ const SelectBar: React.FC<SelectBarProps> = ({
   isLoadingWards,
   onYearChange,
   onMonthChange,
+  onWardChange,
 }) => (
   <ul className="flex space-x-4 pb-2 justify-center items-center">
     <li>
@@ -37,7 +39,11 @@ const SelectBar: React.FC<SelectBarProps> = ({
       {isLoadingWards ? (
         <div>در حال بارگذاری...</div>
       ) : (
-        <CustomSelectBox options={wardOptions} defaultOption="انتخاب بخش" />
+        <CustomSelectBox
+          options={["همه", ...wardOptions]} 
+          defaultOption="انتخاب بخش"
+          onChange={onWardChange}
+        />
       )}
     </li>
     <li className="font-medium text-sm px-4 py-2 hover:bg-slate-100 rounded-xl">

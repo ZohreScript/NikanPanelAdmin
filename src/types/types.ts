@@ -16,16 +16,16 @@ export interface WardItem {
   updateDate: string;
 }
 
-export interface EventDetails {
+export interface BedEvent {
   event_id: number;
   deviceNumber: number;
   bedNumber: number;
   rfid: number;
-  serialNumber: string | null;
-  rfiD_Name: string | null;
-  date: string; 
+  serialNumber: string;
+  rfiD_Name: string;
+  date: string;
   year: number;
-  month: number;
+  mount: number;
   day: number;
   hours: number;
   minute: number;
@@ -46,20 +46,30 @@ export interface EventDetails {
   iscalling: boolean;
 }
 
+export interface RoomDetail {
+  roomName: string;
+  ring: number;
+  staffRing: number;
+  emergencyRing: number;
+  averageOfAnswerinSecond: number;
+}
 
-export type WardEventDetail = {
+export interface WardEventsDetail {
   wardName: string;
   ring: number;
   staffRing: number;
   emergencyRing: number;
   averageOfAnswerinSecond: number;
   roomDetail: RoomDetail[];
-};
+}
 
-export type RoomDetail = {
-  roomName: string;
-  ring: number;
-  staffRing: number;
-  emergencyRing: number;
-  averageOfAnswerinSecond: number;
-};
+export interface ResponseData {
+  total: number;
+  pageNum: number;
+  pageCount: number;
+  totalPages: number;
+  pageNumPages: number;
+  pageCountPages: number;
+  bedEvents: BedEvent[];
+  wardEventsDetailes: WardEventsDetail[];
+}

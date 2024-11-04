@@ -3,43 +3,53 @@ import { useAppContext } from "../../context/app/App-context";
 import SelectBar from "./SelectBar";
 import moment from "moment-jalaali";
 import { useWardList } from "../../hooks/useWardList";
+import { useDispatch } from "react-redux";
+import { setMonth, setWard, setYear } from "../../slices/selectionSlice";
 
 moment.loadPersian({ usePersianDigits: false });
 
 const monthOptions = [
-  "فروردین",
-  "اردیبهشت",
-  "خرداد",
-  "تیر",
-  "مرداد",
-  "شهریور",
-  "مهر",
-  "آبان",
-  "آذر",
-  "دی",
-  "بهمن",
-  "اسفند",
+  { label: "فروردین", value: 1 },
+  { label: "اردیبهشت", value: 2 },
+  { label: "خرداد", value: 3 },
+  { label: "تیر", value: 4 },
+  { label: "مرداد", value: 5 },
+  { label: "شهریور", value: 6 },
+  { label: "مهر", value: 7 },
+  { label: "آبان", value: 8 },
+  { label: "آذر", value: 9 },
+  { label: "دی", value: 10 },
+  { label: "بهمن", value: 11 },
+  { label: "اسفند", value: 12 },
 ];
 const currentYear = moment().jYear();
 const yearOptions = [String(currentYear), String(currentYear - 1)];
 
 const TopNav: React.FC = () => {
-  const { showSidebar, toggleSidebar } = useAppContext();
+    const { showSidebar, toggleSidebar } = useAppContext();
   const { data: wards, isPending: isLoadingWards } = useWardList(true);
 
+  const dispatch = useDispatch();
+
+  const handleYearChange = (year: string) => {
+    dispatch(setYear(year));
+    console.log(year);
+    console.log(yearOptions);
+  };
+
+  const handleMonthChange = (month: string) => {
+    dispatch(setMonth(month));
+  };
+
+  const handleWardChange = (ward: string) => {
+    dispatch(setWard(ward === "همه" ? null : ward));  };
   const handleLogout = () => {
     console.log("User logged out");
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
 
-  const handleMonthChange = () => {
-    console.log("month change");
-  };
 
-  const handleYearChange = () => {
-    console.log("yearchange");
-  };
 
   return (
     <nav className="bg-white md:flex sm:flex relative text-gray-600 items-center shadow-md justify-between">
@@ -88,13 +98,14 @@ const TopNav: React.FC = () => {
       </ul>
 
       <div className="flex items-center gap-3 md:ms-auto ms-0 me-3">
-        <SelectBar
+      <SelectBar
           yearOptions={yearOptions}
           monthOptions={monthOptions}
-          wardOptions={wards?.map((ward) => ward.wardName) || []}
+          wardOptions={wards?.map(ward => ward.wardName) || []}
           isLoadingWards={isLoadingWards}
           onYearChange={handleYearChange}
           onMonthChange={handleMonthChange}
+          onWardChange={handleWardChange}
         />
         <button
           className="text-gray-800 focus:outline-none md:block hidden"
