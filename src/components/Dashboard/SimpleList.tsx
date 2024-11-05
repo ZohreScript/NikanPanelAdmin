@@ -23,21 +23,25 @@ const SimpleList: React.FC = () => {
   const handleSelectChange = (option: string) => {
     setSelectedFileType(option);
   };
-  // Assuming default page and count for fetching bed events
   const page = 1;
   const count = 10;
-  
-  const { data, isLoading, error } = useWardEvents(page, count, year, month, ward);
+  const { data, isLoading, error } = useWardEvents(
+    page,
+    count,
+    year,
+    month,
+    ward
+  );
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading data</p>;
 
   const bedEvents = data?.bedEvents || [];
-console.log("bedEvents:",bedEvents)
+  console.log("bedEvents:", bedEvents);
   return (
     <div className="mt-2 p-6 grid grid-cols-1 gap-5">
       <div className="card flex flex-col bg-white w-full text-gray-600 p-4 shadow-2xl">
-      <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
           <p className="text-xs md:text-lg md:hidden block text-gray-700 font-bold text-right">
             لیست ساده آخرین رکوردها
             <span className="text-sm md:text-base text-gray-500 ml-2">
@@ -45,7 +49,7 @@ console.log("bedEvents:",bedEvents)
             </span>
           </p>
           <div className="flex items-center gap-4 md:my-0 my-4">
-          <button
+            <button
               onClick={handleExport}
               className="w-full md:px-4 px-3 py-3 text-xs md:py-2 bg-blue-500 text-white rounded-lg"
             >
@@ -55,11 +59,11 @@ console.log("bedEvents:",bedEvents)
               options={exportfile}
               defaultOption=" نوع فایل"
               onChange={(option) => {
-                if (typeof option === 'string') {
+                if (typeof option === "string") {
                   handleSelectChange(option);
-                }}}
+                }
+              }}
             />
-        
           </div>
           <p className="text-xs md:text-lg md:block hidden text-gray-700 font-bold text-right">
             لیست ساده آخرین رکوردها
@@ -68,31 +72,60 @@ console.log("bedEvents:",bedEvents)
             </span>
           </p>
         </div>
-        <div className="overflow-x-auto" dir="rtl">
-          <table className="w-full text-left text-gray-500">
+        <div className="overflow-x-auto max-h-96" dir="rtl">
+          <table className="w-full text-left  text-gray-500">
             <thead className="mt-2 text-right">
               <tr>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">ردیف</th>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">شماره دستگاه</th>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">شماره تخت</th>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">شماره اتاق</th>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">وضعیت</th>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">تاریخ</th>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">ساعت</th>
-
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  ردیف
+                </th>
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  شماره دستگاه
+                </th>
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  شماره تخت
+                </th>
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  شماره اتاق
+                </th>
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  وضعیت
+                </th>
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  تاریخ
+                </th>
+                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+                  ساعت
+                </th>
               </tr>
             </thead>
             <tbody>
               {bedEvents.map((event, index) => (
-                <tr key={index} className="border-b border-gray-200 text-center">
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{index + 1}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{event.deviceNumber}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{event.bedNumber}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{event.roomName}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{event.statusName}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{event.date}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{event.hours}:{event.minute}:{event.second}</td>
-
+                <tr
+                  key={index}
+                  className="border-b border-gray-200 text-center"
+                >
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {index + 1}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {event.deviceNumber}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {event.bedNumber}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {event.roomName}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {event.statusName}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {event.date}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                    {event.hours}:{event.minute}:{event.second}
+                  </td>
                 </tr>
               ))}
             </tbody>
