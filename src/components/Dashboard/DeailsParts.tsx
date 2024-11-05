@@ -26,6 +26,7 @@ const DetailsParts: React.FC = () => {
     setPage(1);
   };
 
+
   const wardEvents = data?.wardEventsDetailes || [];
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / count);

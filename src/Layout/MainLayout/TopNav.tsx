@@ -23,7 +23,7 @@ const monthOptions = [
   { label: "اسفند", value: 12 },
 ];
 const currentYear = moment().jYear();
-const yearOptions = [String(currentYear), String(currentYear - 1)];
+const yearOptions = [currentYear, currentYear - 1];
 
 const TopNav: React.FC = () => {
     const { showSidebar, toggleSidebar } = useAppContext();
@@ -31,14 +31,15 @@ const TopNav: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const handleYearChange = (year: string) => {
+  const handleYearChange = (year: number) => {
     dispatch(setYear(year));
     console.log(year);
     console.log(yearOptions);
   };
 
-  const handleMonthChange = (month: string) => {
-    dispatch(setMonth(month));
+  const handleMonthChange = (monthValue: number) => {
+    dispatch(setMonth(monthValue));
+    console.log(monthValue);
   };
 
   const handleWardChange = (ward: string) => {
