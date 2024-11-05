@@ -36,7 +36,7 @@ const fetchWardEventsDetails = async (page: number, count: number, year: number,
 export const useWardEvents = (page: number, count: number = 10, year:
   number, month: number, wardName: string) => {
   return useQuery<ResponseData, Error>({
-    queryKey: ['wardEvents', page, count, year, month, wardName],
+    queryKey: ['wardEvents', page, count, year, month, wardName,],
     queryFn: () => fetchWardEventsDetails(page, count, year, month,wardName),
   });
 };

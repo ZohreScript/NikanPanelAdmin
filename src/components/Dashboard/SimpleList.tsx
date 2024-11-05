@@ -1,28 +1,40 @@
-import { useWardEvents } from "../../hooks/useWardEvents";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { useState } from "react";
 import CustomSelectBox from "../CustomSelectBox";
+import { useExportFile } from "../../hooks/useExportFile";
+import { useWardEvents } from "../../hooks/useWardEvents";
 
 const SimpleList: React.FC = () => {
   const [selectedFileType, setSelectedFileType] = useState<string>("");
   const { ward, year, month } = useSelector(
     (state: RootState) => state.selectedWard
   );
-  const exportfile: string[] = ["Excel", "Word", "Xml", "Json", "XSD"];
+  const exportfile: string[] = ["Excel", "Xml", "Json", "XSD", "Word"];
+  const exportMapping: Record<string, number> = {
+    Excel: 0,
+    Xml: 1,
+    Json: 2,
+    XSD: 3,
+    Word: 4,
+  };
+
+  const { mutate: exportData, isPending: isExporting } = useExportFile();
 
   const handleExport = () => {
     if (selectedFileType === "") {
       alert("لطفاً نوع فایل را انتخاب کنید.");
       return;
     }
-    // This is where you would add the file export logic.
-    console.log(`Exporting ${selectedFileType}...`);
+
+    const exportType = exportMapping[selectedFileType];
+    exportData(exportType); 
   };
 
   const handleSelectChange = (option: string) => {
     setSelectedFileType(option);
   };
+
   const page = 1;
   const count = 10;
   const { data, isLoading, error } = useWardEvents(
@@ -37,7 +49,7 @@ const SimpleList: React.FC = () => {
   if (error) return <p>Error loading data</p>;
 
   const bedEvents = data?.bedEvents || [];
-  console.log("bedEvents:", bedEvents);
+
   return (
     <div className="mt-2 p-6 grid grid-cols-1 gap-5">
       <div className="card flex flex-col bg-white w-full text-gray-600 p-4 shadow-2xl">
@@ -52,12 +64,13 @@ const SimpleList: React.FC = () => {
             <button
               onClick={handleExport}
               className="w-full md:px-4 px-3 py-3 text-xs md:py-2 bg-blue-500 text-white rounded-lg"
+              disabled={isExporting}
             >
-              دریافت خروجی
+              {isExporting ? "در حال دریافت..." : "دریافت خروجی"}
             </button>
             <CustomSelectBox
               options={exportfile}
-              defaultOption=" نوع فایل"
+              defaultOption="نوع فایل"
               onChange={(option) => {
                 if (typeof option === "string") {
                   handleSelectChange(option);
@@ -73,7 +86,7 @@ const SimpleList: React.FC = () => {
           </p>
         </div>
         <div className="overflow-x-auto max-h-96" dir="rtl">
-          <table className="w-full text-left  text-gray-500">
+          <table className="w-full text-left text-gray-500">
             <thead className="mt-2 text-right">
               <tr>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">

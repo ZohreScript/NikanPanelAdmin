@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useWardEvents } from "../../hooks/useWardEvents";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import RoomDetails from "./RoomDetails"; // کامپوننت جزئیات اتاق‌ها
 
 const DetailsParts: React.FC = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(10);
+  const [selectedWard, setSelectedWard] = useState<string | null>(null); // اضافه کردن state برای نمایش جزئیات اتاق‌ها
   const { ward, year, month } = useSelector(
     (state: RootState) => state.selectedWard
   );
@@ -17,6 +19,10 @@ const DetailsParts: React.FC = () => {
     ward
   );
 
+  const handleRoomDetailsClick = (wardName: string) => {
+    setSelectedWard(wardName); // تنظیم نام بخش انتخاب شده
+  };
+
   useEffect(() => {
     refetch();
   }, [count, page, year, month, ward, refetch]);
@@ -26,15 +32,14 @@ const DetailsParts: React.FC = () => {
     setPage(1);
   };
 
-
   const wardEvents = data?.wardEventsDetailes || [];
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / count);
-  const dynamicHeight = `${Math.min(wardEvents.length, count) * 50}px`; // 50px for each row height, adjust as needed
+  const dynamicHeight = `${Math.min(wardEvents.length, count) * 50}px`;
 
   const filteredWardEvents = ward === null || ward === ""
-    ? wardEvents 
-    : wardEvents.filter((wardEvent) => wardEvent.wardName === ward); 
+    ? wardEvents
+    : wardEvents.filter((wardEvent) => wardEvent.wardName === ward);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading data</p>;
@@ -62,7 +67,6 @@ const DetailsParts: React.FC = () => {
           جزییات بخش
         </p>
 
-        {/* Dynamic Table Height */}
         <div
           className="overflow-y-auto"
           style={{ height: dynamicHeight }}
@@ -113,12 +117,12 @@ const DetailsParts: React.FC = () => {
                     {ward.averageOfAnswerinSecond}
                   </td>
                   <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
-                    <a
-                      href={`/roomdetails/${ward.wardName}`}
-                      className="text-blue-500 "
+                    <button
+                      onClick={() => handleRoomDetailsClick(ward.wardName)}
+                      className="text-blue-500"
                     >
                       مشاهده اتاقها
-                    </a>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -126,7 +130,6 @@ const DetailsParts: React.FC = () => {
           </table>
         </div>
 
-        {/* Pagination Controls */}
         <div className="flex justify-between items-center mt-4">
           <button
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
@@ -147,6 +150,11 @@ const DetailsParts: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* نمایش کامپوننت RoomDetails به صورت شرطی */}
+      {selectedWard && (
+        <RoomDetails wardName={selectedWard} />
+      )}
     </div>
   );
 };

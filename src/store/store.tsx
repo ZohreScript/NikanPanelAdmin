@@ -1,7 +1,6 @@
 // src/redux/store.ts
-import { configureStore } from '@reduxjs/toolkit';
-import selectedWardReducer from '../slices/selectionSlice';
-
+import { configureStore } from "@reduxjs/toolkit";
+import selectedWardReducer from "../slices/selectionSlice";
 const store = configureStore({
   reducer: {
     selectedWard: selectedWardReducer,
