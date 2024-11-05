@@ -4,7 +4,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 interface CustomSelectBoxProps {
   options: (string | { label: string; value: number })[];
   defaultOption: string;
-  onChange?: (option: string | number) => void;
+  onChange?: (option: string | number | null) => void;
 }
 
 const CustomSelectBox: React.FC<CustomSelectBoxProps> = ({ options, defaultOption, onChange }) => {
@@ -34,7 +34,7 @@ const CustomSelectBox: React.FC<CustomSelectBoxProps> = ({ options, defaultOptio
   return (
     <div className="relative w-full" ref={selectBoxRef}>
       <div
-        className="bg-white text-right text-sm text-gray-600 border border-gray-300 py-2 px-3 rounded-lg cursor-pointer min-w-32 flex items-center justify-between"
+        className="bg-white text-right text-[10px] md:text-sm text-gray-600 border border-gray-300 py-2 px-3 rounded-lg cursor-pointer min-w-32 flex items-center justify-between"
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? (
@@ -46,12 +46,12 @@ const CustomSelectBox: React.FC<CustomSelectBoxProps> = ({ options, defaultOptio
       </div>
 
       {isOpen && (
-        <ul className="absolute text-sm mt-1 text-right w-full text-gray-600 bg-white border border-gray-300 rounded-lg shadow-lg z-10 min-w-32">
+        <ul className="absolute  text-[10px] md:text-sm mt-1 text-right w-full text-gray-600 bg-white border border-gray-300 rounded-lg shadow-lg z-10 min-w-32">
           {(options as (string | { label: string; value: number })[]).map((option) => (
             <li
               key={typeof option === 'string' ? option : option.value}
               onClick={() => handleOptionClick(option)}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              className="px-4 text-[10px] md:text-sm py-2 hover:bg-gray-100 cursor-pointer"
             >
               {typeof option === 'string' ? option : option.label}
             </li>

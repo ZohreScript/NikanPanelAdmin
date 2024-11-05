@@ -26,7 +26,7 @@ const currentYear = moment().jYear();
 const yearOptions = [currentYear, currentYear - 1];
 
 const TopNav: React.FC = () => {
-    const { showSidebar, toggleSidebar } = useAppContext();
+  const { showSidebar, toggleSidebar } = useAppContext();
   const { data: wards, isPending: isLoadingWards } = useWardList(true);
 
   const dispatch = useDispatch();
@@ -43,26 +43,29 @@ const TopNav: React.FC = () => {
   };
 
   const handleWardChange = (ward: string) => {
-    dispatch(setWard(ward === "همه" ? null : ward));  };
+    dispatch(setWard(ward === 'همه' ?  '' : ward));
+  };
+
+
+
+
   const handleLogout = () => {
     console.log("User logged out");
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
 
-
-
   return (
     <nav className="bg-white md:flex sm:flex relative text-gray-600 items-center shadow-md justify-between">
       <ul className="flex space-x-4">
         <button
-          className="text-gray-800 p-2 focus:outline-none md:hidden block"
+          className="text-gray-800 ml-2 p-2 focus:outline-none md:hidden block"
           onClick={toggleSidebar}
         >
           {showSidebar ? (
-            <FaBars className="text-gray-600" />
+            <FaBars className="text-gray-600 text-xl" />
           ) : (
-            <FaTimes className="text-gray-600" />
+            <FaTimes className="text-gray-600 text-xl" />
           )}
         </button>
         <div className="navbar">
@@ -98,24 +101,24 @@ const TopNav: React.FC = () => {
         </div>
       </ul>
 
-      <div className="flex items-center gap-3 md:ms-auto ms-0 me-3">
-      <SelectBar
+      <div className="flex items-center justify-center gap-3 md:ms-auto ms-0 me-0 md:me-3">
+        <SelectBar
           yearOptions={yearOptions}
           monthOptions={monthOptions}
-          wardOptions={wards?.map(ward => ward.wardName) || []}
+          wardOptions={wards?.map((ward) => ward.wardName) || []}
           isLoadingWards={isLoadingWards}
           onYearChange={handleYearChange}
           onMonthChange={handleMonthChange}
           onWardChange={handleWardChange}
         />
         <button
-          className="text-gray-800 focus:outline-none md:block hidden"
+          className="text-blue-950 bg-gray-100 mb-2 p-2 justify-center items-center focus:outline-none md:block hidden"
           onClick={toggleSidebar}
         >
           {showSidebar ? (
-            <FaBars className="text-gray-600" />
+            <FaBars className="text-gray-600 text-2xl" />
           ) : (
-            <FaTimes className="text-gray-600" />
+            <FaTimes className="text-gray-600 text-2xl" />
           )}
         </button>
       </div>

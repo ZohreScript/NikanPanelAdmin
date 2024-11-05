@@ -1,4 +1,4 @@
-import LastRecord from "../../components/Dashboard/LastRecord";
+import LastRecord from "../../components/Dashboard/SimpleList";
 
 const EhzarReports = () => {
     return <LastRecord/>;

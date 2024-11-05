@@ -2,28 +2,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface SelectedWardState {
-  ward: string | null;
-  year: string | number | null;
-  month: number | null; 
+  ward: string ;
+  year: number ;
+  month: number ; 
 }
 
 const initialState: SelectedWardState = {
-  ward: null,
-  year: null,
-  month: null,
+  ward: '',
+    year: 0,
+  month: 0,
 };
 
 const selectedWardSlice = createSlice({
   name: 'selectedWard',
   initialState,
   reducers: {
-    setWard(state, action: PayloadAction<string | null>) {
+    setWard(state, action: PayloadAction<string >) {
       state.ward = action.payload;
     },
-    setYear(state, action: PayloadAction<string | number | null>) {
+    setYear(state, action: PayloadAction< number >) {
       state.year = action.payload;
     },
-    setMonth(state, action: PayloadAction<number | null> ) {
+    setMonth(state, action: PayloadAction<number > ) {
       state.month = action.payload;
     },
   },

@@ -9,7 +9,7 @@ interface DataRow {
   date: string;
 }
 
-const LastRecord: React.FC = () => {
+const SimpleList: React.FC = () => {
   const [selectedFileType, setSelectedFileType] = useState<string>("");
 
   const data: DataRow[] = [
@@ -71,26 +71,26 @@ const LastRecord: React.FC = () => {
           <table className="w-full text-left text-gray-500">
             <thead className="mt-2 text-right">
               <tr>
-                <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
+              <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
                   ردیف
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                  نام بخش
+                  شماره دستگاه
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                  زنگ عادی
+                  شماره تخت
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                  زنگ استف
+                  شماره اتاق
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                  زنگ اضطراری
+                  نام وضعیت
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                  میانگین پاسخ دهی
+                  تاریخ
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                  جزئیات
+                ساعت
                 </th>
               </tr>
             </thead>
@@ -128,4 +128,4 @@ const LastRecord: React.FC = () => {
   );
 };
 
-export default LastRecord;
+export default SimpleList;

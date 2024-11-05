@@ -1,9 +1,8 @@
 import DetailsParts from "../../components/Dashboard/DeailsParts";
-import LastRecord from "../../components/Dashboard/LastRecord";
-import SimpleCalandar from "../../components/Dashboard/SimpleCalandar";
 import Analysis from "../../components/Dashboard/Analysis"
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import SimpleList from "../../components/Dashboard/SimpleList";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -13,8 +12,7 @@ const Dashboard = () => {
     <div className="flex flex-col container mx-auto w-full  ">
       <Analysis/>
       <DetailsParts />
-      <LastRecord />
-      <SimpleCalandar/>
+      <SimpleList  />
     </div>
   );
 };

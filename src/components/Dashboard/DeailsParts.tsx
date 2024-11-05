@@ -115,9 +115,9 @@ const DetailsParts: React.FC = () => {
                   <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
                     <a
                       href={`/roomdetails/${ward.wardName}`}
-                      className="text-blue-500 underline"
+                      className="text-blue-500 "
                     >
-                      جزئیات
+                      مشاهده اتاقها
                     </a>
                   </td>
                 </tr>

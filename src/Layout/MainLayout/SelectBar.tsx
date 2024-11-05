@@ -42,8 +42,11 @@ const SelectBar: React.FC<SelectBarProps> = ({
         <CustomSelectBox
           options={["همه", ...wardOptions]} 
           defaultOption="انتخاب بخش"
-          onChange={onWardChange}
-        />
+          onChange={(option) => {
+            if (typeof option === 'string') {
+              onWardChange(option);
+            }
+          }}        />
       )}
     </li>
   </ul>
