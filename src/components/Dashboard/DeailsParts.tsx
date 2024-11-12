@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useWardEvents } from "../../hooks/useWardEvents";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import RoomDetails from "./RoomDetails"; // کامپوننت جزئیات اتاق‌ها
+import RoomDetails from "./RoomDetails"; 
 
 const DetailsParts: React.FC = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(10);
-  const [selectedWard, setSelectedWard] = useState<string | null>(null); // اضافه کردن state برای نمایش جزئیات اتاق‌ها
+  const [selectedWard, setSelectedWard] = useState<string | null>(null); 
   const { ward, year, month } = useSelector(
     (state: RootState) => state.selectedWard
   );
@@ -20,7 +20,7 @@ const DetailsParts: React.FC = () => {
   );
 
   const handleRoomDetailsClick = (wardName: string) => {
-    setSelectedWard(wardName); // تنظیم نام بخش انتخاب شده
+    setSelectedWard(wardName); 
   };
 
   useEffect(() => {

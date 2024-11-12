@@ -1,7 +1,12 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import axios, {
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosError,
+} from "axios";
 
 const AUTH_BASE_URL = "http://93.118.144.59:8003/api/v1";
 const WARD_BASE_URL = "http://93.118.144.59:8002/api/v1";
+const PATIENT_BASE_URL = "http://93.118.144.59:8001/api/v1";
 
 export const authService = axios.create({
   baseURL: AUTH_BASE_URL,
@@ -11,12 +16,15 @@ export const wardService = axios.create({
   baseURL: WARD_BASE_URL,
 });
 
-
-
+export const patientService = axios.create({
+  baseURL: PATIENT_BASE_URL,
+});
 
 // Request interceptor to add token to headers
 authService.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+  async (
+    config: InternalAxiosRequestConfig
+  ): Promise<InternalAxiosRequestConfig> => {
     const token = localStorage.getItem("token");
     if (token && config.headers) {
       config.headers.authorization = `Bearer ${token}`;
@@ -32,8 +40,8 @@ authService.interceptors.response.use(
   async (error: AxiosError) => {
     if (error.response && error.response.status === 401) {
       console.log("Unauthorized - clearing token");
-      localStorage.removeItem("token"); 
-      window.location.href = "/login"; 
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }

@@ -73,3 +73,77 @@ pageCountPages: number;
 bedEvents: BedEvent[];
 wardEventsDetailes: WardEventsDetail[];
 }
+
+export interface PatientInfo {
+  no_pazir: string;
+  id: number;
+  name_b: string;
+  bed_name: string;
+  room_name: string;
+  name_bakhsh: string;
+  bast_date: string;
+  name_p: string;
+  name_bimari: string;
+  sex: number;
+  sen: number;
+  isoleh: number;
+  feed: string;
+  room_no: string;
+  p_morning: string;
+  p_Evening: string;
+  p_Night: string;
+  toz_kardeks: string;
+  movement_Status: string;
+  blood_Ban: number;
+  fracture_Type: number;
+  braceelet: number;
+  need_Wheelchair: boolean;
+  time_j: string;
+  bed_serial: number;
+}
+
+export interface PatientInfoResponse {
+  total: number;
+  pageNum: number;
+  pageCount: number;
+  totalPages: number;
+  pageNumPages: number;
+  pageCountPages: number;
+  patientInfos: PatientInfo[];
+}
+
+export interface RegisterPatientData {
+  no_pazir: string;
+  id: number;
+  name_b: string;
+  bed_name: string;
+  room_name: string;
+  name_bakhsh: string;
+  bast_date: string;
+  name_p: string;
+  name_bimari: string;
+  sex: number;
+  sen: number;
+  isoleh: number;
+  feed: string;
+  room_no: string;
+  p_morning: string;
+  p_Evening: string;
+  p_Night: string;
+  toz_kardeks: string;
+  movement_Status: string;
+  blood_Ban: number;
+  fracture_Type: number;
+  braceelet: number;
+  need_Wheelchair: boolean;
+  time_j: string;
+  bed_serial: number;
+}
+
+export interface RegisterPatientResponse {
+  result: boolean;
+  msg: string | null;
+  data: unknown | null;  }
+
+
+

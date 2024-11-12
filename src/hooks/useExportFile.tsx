@@ -1,7 +1,6 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { wardService } from '../Services/HttpService';
 
-// Define the ExportResponse type
 export type ExportResponse = {
   result: boolean;
   exception: string | null;
@@ -12,7 +11,6 @@ export type ExportResponse = {
   fileString: string;
 };
 
-// Define the useExportFile hook with proper return type
 export const useExportFile = (): UseMutationResult<ExportResponse, Error, number> => {
   return useMutation<ExportResponse, Error, number>({
     mutationFn: async (exportType: number) => {
