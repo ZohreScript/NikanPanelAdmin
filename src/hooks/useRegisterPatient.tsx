@@ -10,9 +10,11 @@ export const useRegisterPatient = () => {
       return response.data;
     },
     onSuccess: (response) => {
-      if (response?.result) {
+      if (response?.data) {
+        console.log("register",response.data)
+        console.log("register2",response.result)
+        console.log("register3",response)
         toast.success("مشخصات بیمار با موفقیت ثبت شد.");
-        console.log("ثبت بیمار:", response.data); 
       } else {
         toast.error(response?.msg || "ثبت مشخصات بیمار ناموفق بود.");
       }
@@ -23,3 +25,4 @@ export const useRegisterPatient = () => {
     },
   });
 };
+

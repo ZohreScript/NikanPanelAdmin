@@ -143,7 +143,7 @@ export interface RegisterPatientData {
 export interface RegisterPatientResponse {
   result: boolean;
   msg: string | null;
-  data: unknown | null;  }
+  data: RegisterPatientData;  }
 
 
 

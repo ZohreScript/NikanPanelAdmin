@@ -1,8 +1,17 @@
+
 import React, { useState, useEffect } from "react";
 import { usePatientInformations } from "../../hooks/usePatientInformations";
 import { BsThreeDots } from "react-icons/bs";
+import { RegisterPatientData } from "../../types/types";
 
-const PatientTable: React.FC = () => {
+interface PatientTableProps {
+  openEditModal: (patientData: RegisterPatientData) => void;
+  patients: RegisterPatientData[]; 
+
+}
+
+
+const PatientTable: React.FC<PatientTableProps> = ({ openEditModal }) => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(10);
   const { data, isLoading, error, refetch } = usePatientInformations(
@@ -22,6 +31,7 @@ const PatientTable: React.FC = () => {
     setCount(Number(e.target.value));
     setPage(1);
   };
+  
   const patientdetails = data?.patientInfos || [];
 
   if (isLoading) return <p>Loading...</p>;
@@ -200,16 +210,18 @@ const PatientTable: React.FC = () => {
                     {patient.time_j}
                   </td>
                   <td className="py-4 px-0.5 text-sm font-bold text-navy-700 items-center justify-center flex">
-                    <div className="dropdown dropdown-bottom">
+                    <div className="dropdown dropdown-left " >
                       <div tabIndex={0} role="button" className=" m-1">
                         <BsThreeDots className="text-2xl" />
                       </div>
                       <ul
                         tabIndex={0}
-                        className="dropdown-content  menu bg-base-100 rounded-box z-[1] p-1 w-24  shadow"
+                        className="dropdown-content  menu bg-slate-50 rounded-sm z-[1] p-1 w-52 mt-2  shadow-lg"
                       >
                         <li>
-                          <a>ویرایش </a>
+                          <a className="whitespace-nowrap" 
+                          onClick={() => openEditModal(patient)}
+                          >ویرایش مشخصات بیمار </a>
                         </li>
                       </ul>
                     </div>

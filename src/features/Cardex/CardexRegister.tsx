@@ -1,45 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useRegisterPatient } from "../../hooks/useRegisterPatient";
 import PatientTable from "./PatientTable";
-import { RegisterPatientData } from "../../types/types";
+import { RegisterPatientData, RegisterPatientResponse } from "../../types/types";
+import PatientModal from "./PatientModal";
+import "react-toastify/dist/ReactToastify.css";
+import useUpdatePatientMutation from "../../hooks/useEditPatient";
+import { ToastContainer, toast } from "react-toastify";
+import { usePatientInformations } from "../../hooks/usePatientInformations";
+
+const initialPatientData: RegisterPatientData = {
+  no_pazir: "",
+  id: 0,
+  name_b: "",
+  bed_name: "",
+  room_name: "",
+  name_bakhsh: "",
+  bast_date: "",
+  name_p: "",
+  name_bimari: "",
+  sex: 0,
+  sen: 0,
+  isoleh: 0,
+  feed: "",
+  room_no: "",
+  p_morning: "",
+  p_Evening: "",
+  p_Night: "",
+  toz_kardeks: "",
+  movement_Status: "",
+  blood_Ban: 0,
+  fracture_Type: 0,
+  braceelet: 0,
+  need_Wheelchair: false,
+  time_j: "",
+  bed_serial: 0,
+};
 
 const CardexRegister = () => {
+  const [patientData, setPatientData] = useState<RegisterPatientData>(initialPatientData);
   const [isModalOpen, setModalOpen] = useState(false);
   const { mutate } = useRegisterPatient();
+  const { mutate: editPatient } = useUpdatePatientMutation();
+  const { data: patientInfos, refetch } = usePatientInformations(1, 10);
   const [isEditMode, setEditMode] = useState(false);
-  const [patientData, setPatientData] = useState<RegisterPatientData>({
-    no_pazir: "",
-    id: 0,
-    name_b: "",
-    bed_name: "",
-    room_name: "",
-    name_bakhsh: "",
-    bast_date: "",
-    name_p: "",
-    name_bimari: "",
-    sex: 0,
-    sen: 0,
-    isoleh: 0,
-    feed: "",
-    room_no: "",
-    p_morning: "",
-    p_Evening: "",
-    p_Night: "",
-    toz_kardeks: "",
-    movement_Status: "",
-    blood_Ban: 0,
-    fracture_Type: 0,
-    braceelet: 0,
-    need_Wheelchair: false,
-    time_j: "",
-    bed_serial: 0,
-  });
+  const [patients, setPatients] = useState<RegisterPatientData[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);  // اضافه کردن وضعیت برای در حال ارسال بودن
 
   const toggleModal = () => setModalOpen(!isModalOpen);
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setPatientData((prevData) => ({
       ...prevData,
@@ -47,31 +56,86 @@ const CardexRegister = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    mutate(patientData);
-    toggleModal();
+  const handleSuccess = (newPatientData: RegisterPatientData) => {
+    if (isEditMode) {
+      setPatients((prevPatients) =>
+        prevPatients.map((patient) =>
+          patient.no_pazir === newPatientData.no_pazir ? newPatientData : patient
+        )
+      );
+      toast.success("اطلاعات بیمار با موفقیت ویرایش شد.");
+    } else {
+      setPatients((prevPatients) => [...prevPatients, newPatientData]);
+      toast.success("بیمار جدید با موفقیت ثبت شد.");
+    }
+    refetch();
   };
+
+  const handleSubmit = () => {
+    setIsSubmitting(true); // حالت در حال ارسال
+  
+    if (isEditMode) {
+      // ویرایش بیمار
+      editPatient(patientData, {
+        onSuccess: (updatedData: RegisterPatientResponse | null) => {
+          if (updatedData && updatedData.data) { 
+            handleSuccess(updatedData.data);
+            setIsSubmitting(false); 
+            toggleModal();
+          } else {
+            setIsSubmitting(false); 
+            toast.error("ویرایش اطلاعات بیمار ناموفق بود. لطفاً دوباره تلاش کنید.");
+            console.log(updatedData?.data)
+          }
+        },
+        onError: () => {
+          setIsSubmitting(false); 
+          toast.error("خطا در ویرایش اطلاعات بیمار.");
+        },
+      });
+    } else {
+      mutate(patientData, {
+        onSuccess: (newData: RegisterPatientResponse | null) => {
+          if (newData && newData.data) {  
+            handleSuccess(newData.data);
+            setIsSubmitting(false); 
+            toast.success("ثبت بیمار با موفقیت انجام شد.");
+            console.log("newData:", newData.data);
+          } else {
+            setIsSubmitting(false);
+            toast.error("ثبت بیمار ناموفق بود. لطفاً دوباره تلاش کنید.");
+            console.log(newData?.data)
+          }
+        },
+        onError: () => {
+          setIsSubmitting(false); 
+          toast.error("خطا در ثبت بیمار.");
+        },
+      });
+    }
+  };
+  
+
   const openEditModal = (data: RegisterPatientData) => {
     setPatientData(data);
     setEditMode(true);
     setModalOpen(true);
-};
+  };
 
-const openRegisterModal = () => {
+  const openRegisterModal = () => {
     setPatientData(initialPatientData);
     setEditMode(false);
     setModalOpen(true);
-};
+  };
 
+  const patientsData = patientInfos ? (Array.isArray(patientInfos) ? patientInfos : []) : [];
 
   return (
     <>
       <div className="flex flex-col w-full text-gray-600 rounded-lg p-4 mt-8">
-        <p className="text-lg text-gray-700 font-bold text-right mb-4 justify-end">
-          مشخصات بیمار
-        </p>
+        <p className="text-lg text-gray-700 font-bold text-right mb-4 justify-end">مشخصات بیمار</p>
         <div className="flex gap-2 mb-4 justify-end w-full">
-          <button onClick={toggleModal} className="btn btn-primary w-auto">
+          <button onClick={openRegisterModal} className="btn btn-primary w-auto" disabled={isSubmitting}>
             ثبت مشخصات بیمار +
           </button>
           <input
@@ -80,258 +144,18 @@ const openRegisterModal = () => {
             className="input input-bordered w-full text-right"
           />
         </div>
-        {isModalOpen && (
-          <div className="modal modal-open" dir="rtl" onClick={toggleModal}>
-            <div
-              className="modal-box w-11/12 max-w-5xl p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 className="font-bold text-lg mb-4">ثبت مشخصات بیمار</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="label">شماره پذیرش </label>
-                  <input
-                    type="text"
-                    name="no_pazir"
-                    value={patientData.no_pazir}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">نام بیمار</label>
-                  <input
-                    type="text"
-                    name="name_b"
-                    value={patientData.name_b}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-                  <label className="label">نام پزشک</label>
-                  <input
-                    type="text"
-                    name="name_b"
-                    value={patientData.name_p}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-                  <label className="label">نام تخت</label>
-                  <input
-                    type="text"
-                    name="bed_name"
-                    value={patientData.bed_name}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">نام اتاق</label>
-                  <input
-                    type="text"
-                    name="room_name"
-                    value={patientData.room_name}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">نام بخش</label>
-                  <input
-                    type="text"
-                    name="name_bakhsh"
-                    value={patientData.name_bakhsh}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">تاریخ بستری</label>
-                  <input
-                    type="date"
-                    name="bast_date"
-                    value={patientData.bast_date}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">پزشک صبح</label>
-                  <input
-                    type="text"
-                    name="p_morning"
-                    value={patientData.p_morning}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">پزشک عصر</label>
-                  <input
-                    type="text"
-                    name="p_Evening"
-                    value={patientData.p_Evening}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">پزشک شب</label>
-                  <input
-                    type="text"
-                    name="p_Night"
-                    value={patientData.p_Night}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-                  <label className="label">نام بیماری</label>
-                  <input
-                    type="text"
-                    name="name_bimari"
-                    value={patientData.name_bimari}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">جنسیت</label>
-                  <select
-                    name="sex"
-                    value={patientData.sex}
-                    onChange={handleChange}
-                    className="select select-bordered w-full"
-                  >
-                    <option value={1}>مرد</option>
-                    <option value={2}>زن</option>
-                  </select>
-
-                  <label className="label">سن</label>
-                  <input
-                    type="number"
-                    name="sen"
-                    value={patientData.sen}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-                </div>
-
-                <div>
-                  <label className="label">ایزوله</label>
-                  <input
-                    type="number"
-                    name="isoleh"
-                    value={patientData.isoleh}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-                  <label className="label">توضیح کاردکس</label>
-                  <input
-                    type="text"
-                    name="toz_kardeks"
-                    value={patientData.toz_kardeks}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">نوع تغذیه </label>
-                  <input
-                    type="text"
-                    placeholder="feed "
-                    name="feed"
-                    value={patientData.feed}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">شماره اتاق</label>
-                  <input
-                    type="text"
-                    name="room_no"
-                    value={patientData.room_no}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">ممنوعیت تجویز </label>
-                  <input
-                    type="text"
-                    name="blood_Ban"
-                    value={patientData.blood_Ban}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">وضعیت حرکت</label>
-                  <input
-                    type="text"
-                    name="movement_Status"
-                    value={patientData.movement_Status}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">نوع شکستگی</label>
-                  <input
-                    type="number"
-                    name="fracture_Type"
-                    value={patientData.fracture_Type}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">دستبند</label>
-                  <select
-                    name="braceelet"
-                    value={patientData.braceelet}
-                    onChange={handleChange}
-                    className="select select-bordered w-full"
-                  >
-                    <option value="0">بدون دستبند</option>
-                    <option value="1">قرمز</option>
-                    <option value="2">زرد</option>
-                  </select>
-
-                  <label className="label">time-j </label>
-                  <input
-                    type="text"
-                    name="time_j"
-                    value={patientData.time_j}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-
-                  <label className="label">سریال تخت</label>
-                  <input
-                    type="number"
-                    name="bed_serial"
-                    value={patientData.bed_serial}
-                    onChange={handleChange}
-                    className="input input-bordered w-full"
-                  />
-                  <label className="label">نیاز به ویلچر</label>
-                  <select
-                    name="need_Wheelchair"
-                    value={patientData.need_Wheelchair ? "true" : "false"}
-                    onChange={(e) =>
-                      handleChange({
-                        target: {
-                          name: "need_Wheelchair",
-                          value: e.target.value === "true",
-                        },
-                      } as any)
-                    }
-                    className="select select-bordered w-full"
-                  >
-                    <option value="true">بله</option>
-                    <option value="false">خیر</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="modal-action">
-                <button onClick={toggleModal} className="btn">
-                  بستن
-                </button>
-                <button onClick={handleSubmit} className="btn btn-primary">
-                  ثبت
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <PatientModal
+          isOpen={isModalOpen}
+          patientData={patientData}
+          isEditMode={isEditMode}
+          onClose={toggleModal}
+          onSubmit={handleSubmit}
+          onChange={handleChange}
+          existingPatients={patients}
+        />
       </div>
-      <PatientTable />
+      <PatientTable patients={patientsData} openEditModal={openEditModal} />
+      <ToastContainer />
     </>
   );
 };
