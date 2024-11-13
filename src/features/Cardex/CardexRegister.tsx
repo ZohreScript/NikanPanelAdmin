@@ -7,7 +7,7 @@ import { RegisterPatientData } from "../../types/types";
 const CardexRegister = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const { mutate } = useRegisterPatient();
-
+  const [isEditMode, setEditMode] = useState(false);
   const [patientData, setPatientData] = useState<RegisterPatientData>({
     no_pazir: "",
     id: 0,
@@ -51,6 +51,18 @@ const CardexRegister = () => {
     mutate(patientData);
     toggleModal();
   };
+  const openEditModal = (data: RegisterPatientData) => {
+    setPatientData(data);
+    setEditMode(true);
+    setModalOpen(true);
+};
+
+const openRegisterModal = () => {
+    setPatientData(initialPatientData);
+    setEditMode(false);
+    setModalOpen(true);
+};
+
 
   return (
     <>
@@ -94,7 +106,7 @@ const CardexRegister = () => {
                     onChange={handleChange}
                     className="input input-bordered w-full"
                   />
-    <label className="label">نام پزشک</label>
+                  <label className="label">نام پزشک</label>
                   <input
                     type="text"
                     name="name_b"
@@ -249,7 +261,6 @@ const CardexRegister = () => {
                     className="input input-bordered w-full"
                   />
 
-               
                   <label className="label">نوع شکستگی</label>
                   <input
                     type="number"

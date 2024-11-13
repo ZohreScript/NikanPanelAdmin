@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { usePatientInformations } from "../../hooks/usePatientInformations";
+import { BsThreeDots } from "react-icons/bs";
 
 const PatientTable: React.FC = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(10);
-  const { data, isLoading, error, refetch } = usePatientInformations(page, count);
+  const { data, isLoading, error, refetch } = usePatientInformations(
+    page,
+    count
+  );
 
   useEffect(() => {
     refetch();
   }, [page, count, refetch]);
 
+ 
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / count);
 
@@ -25,18 +30,24 @@ const PatientTable: React.FC = () => {
   return (
     <div className="p-6 grid grid-cols-1 gap-5">
       <div className="flex justify-between items-center">
-        <select value={count} onChange={handleCountChange} className="border p-2">
+        <select
+          value={count}
+          onChange={handleCountChange}
+          className="border p-2"
+        >
           <option value={10}>10</option>
           <option value={20}>20</option>
           <option value={40}>40</option>
           <option value={50}>50</option>
         </select>
-        <p>صفحه {page} از {totalPages}</p>
+        <p>
+          صفحه {page} از {totalPages}
+        </p>
       </div>
 
       <div className="card flex flex-col bg-white w-full text-gray-600 p-4 shadow-2xl">
-      <div className="overflow-x-auto overflow-y-auto max-w-11/12"  dir="rtl">  
-    <table className="w-full text-left text-gray-500">
+        <div className="overflow-x-auto overflow-y-auto max-w-11/12" dir="rtl">
+          <table className="w-full text-left text-gray-500">
             <thead className="text-right">
               <tr>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400 whitespace-nowrap">
@@ -82,10 +93,10 @@ const PatientTable: React.FC = () => {
                   پزشک صبح
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400 whitespace-nowrap">
-                  پزشک عصر 
+                  پزشک عصر
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400 whitespace-nowrap">
-                  پزشک شب 
+                  پزشک شب
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400 whitespace-nowrap">
                   توضیح کاردکس
@@ -109,42 +120,100 @@ const PatientTable: React.FC = () => {
                   time-j
                 </th>
                 <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400 whitespace-nowrap">
-                 تنظیمات
+                  تنظیمات
                 </th>
               </tr>
             </thead>
             <tbody>
               {patientdetails.map((patient, index) => (
-                <tr key={index} className="border-b border-gray-200 text-center">
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
+                <tr
+                  key={index}
+                  className="border-b border-gray-200 text-center"
+                >
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
                     {index + 1 + (page - 1) * count}
                   </td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.no_pazir}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.name_b}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap px-4">{patient.name_p}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.name_bakhsh}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.room_no}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.room_name}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.bed_serial}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.bed_name}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.feed}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.movement_Status}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap">{patient.bast_date}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.name_bimari}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.p_morning}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.p_Evening}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.p_Night}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.toz_kardeks}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.blood_Ban}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.braceelet}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.fracture_Type}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.isoleh}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.need_Wheelchair ? 'Yes' : 'No'}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">{patient.time_j}</td>
-                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700">
-                    
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.no_pazir}
                   </td>
-
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.name_b}
+                  </td>
+                  <td className="pt-4 pb-4 text-sm font-bold text-navy-700 whitespace-nowrap px-4">
+                    {patient.name_p}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.name_bakhsh}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.room_no}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.room_name}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.bed_serial}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.bed_name}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.feed}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.movement_Status}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.bast_date}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.name_bimari}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.p_morning}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.p_Evening}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.p_Night}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 whitespace-nowrap">
+                    {patient.toz_kardeks}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.blood_Ban}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.braceelet}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.fracture_Type}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.isoleh}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.need_Wheelchair ? "Yes" : "No"}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
+                    {patient.time_j}
+                  </td>
+                  <td className="py-4 px-0.5 text-sm font-bold text-navy-700 items-center justify-center flex">
+                    <div className="dropdown dropdown-bottom">
+                      <div tabIndex={0} role="button" className=" m-1">
+                        <BsThreeDots className="text-2xl" />
+                      </div>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content  menu bg-base-100 rounded-box z-[1] p-1 w-24  shadow"
+                      >
+                        <li>
+                          <a>ویرایش </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -159,7 +228,9 @@ const PatientTable: React.FC = () => {
           >
             بعدی
           </button>
-          <span>صفحه {page} از {totalPages}</span>
+          <span>
+            صفحه {page} از {totalPages}
+          </span>
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page === 1}
