@@ -1,50 +1,57 @@
-import { useState } from "react";
-import { useRegisterPatient } from "../../hooks/useRegisterPatient";
-import PatientTable from "./PatientTable";
-import { RegisterPatientData, RegisterPatientResponse } from "../../types/types";
-import PatientModal from "./PatientModal";
+// src/components/CardexRegister.tsx
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPatient, updatePatient, setLoading } from '../../slices/patientsSlice';
+import { RegisterPatientData, RegisterPatientResponse } from '../../types/types';
+import PatientTable from './PatientTable';
+import PatientModal from './PatientModal';
 import "react-toastify/dist/ReactToastify.css";
-import useUpdatePatientMutation from "../../hooks/useEditPatient";
-import { ToastContainer, toast } from "react-toastify";
-import { usePatientInformations } from "../../hooks/usePatientInformations";
+import { ToastContainer, toast } from 'react-toastify';
+import { useRegisterPatient } from '../../hooks/useRegisterPatient';
+import useUpdatePatientMutation from '../../hooks/useEditPatient';
+import { usePatientInformations } from '../../hooks/usePatientInformations';
+import { RootState } from '../../store/store';
 
 const initialPatientData: RegisterPatientData = {
-  no_pazir: "",
+  no_pazir: '',
   id: 0,
-  name_b: "",
-  bed_name: "",
-  room_name: "",
-  name_bakhsh: "",
-  bast_date: "",
-  name_p: "",
-  name_bimari: "",
+  name_b: '',
+  bed_name: '',
+  room_name: '',
+  name_bakhsh: '',
+  bast_date: '',
+  name_p: '',
+  name_bimari: '',
   sex: 0,
   sen: 0,
   isoleh: 0,
-  feed: "",
-  room_no: "",
-  p_morning: "",
-  p_Evening: "",
-  p_Night: "",
-  toz_kardeks: "",
-  movement_Status: "",
+  feed: '',
+  room_no: '',
+  p_morning: '',
+  p_Evening: '',
+  p_Night: '',
+  toz_kardeks: '',
+  movement_Status: '',
   blood_Ban: 0,
   fracture_Type: 0,
   braceelet: 0,
   need_Wheelchair: false,
-  time_j: "",
+  time_j: '',
   bed_serial: 0,
 };
 
 const CardexRegister = () => {
   const [patientData, setPatientData] = useState<RegisterPatientData>(initialPatientData);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isEditMode, setEditMode] = useState(false);
+
+  const dispatch = useDispatch();
+  const patients = useSelector((state: RootState) => state.patients.patients);
+
   const { mutate } = useRegisterPatient();
   const { mutate: editPatient } = useUpdatePatientMutation();
   const { data: patientInfos, refetch } = usePatientInformations(1, 10);
-  const [isEditMode, setEditMode] = useState(false);
-  const [patients, setPatients] = useState<RegisterPatientData[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);  // اضافه کردن وضعیت برای در حال ارسال بودن
 
   const toggleModal = () => setModalOpen(!isModalOpen);
 
@@ -58,39 +65,33 @@ const CardexRegister = () => {
 
   const handleSuccess = (newPatientData: RegisterPatientData) => {
     if (isEditMode) {
-      setPatients((prevPatients) =>
-        prevPatients.map((patient) =>
-          patient.no_pazir === newPatientData.no_pazir ? newPatientData : patient
-        )
-      );
+      dispatch(updatePatient(newPatientData));
       toast.success("اطلاعات بیمار با موفقیت ویرایش شد.");
     } else {
-      setPatients((prevPatients) => [...prevPatients, newPatientData]);
+      dispatch(addPatient(newPatientData));
       toast.success("بیمار جدید با موفقیت ثبت شد.");
     }
     refetch();
+    toggleModal();
   };
 
   const handleSubmit = () => {
-    setIsSubmitting(true); // حالت در حال ارسال
-  
+    setIsSubmitting(true); 
+    dispatch(setLoading(true)); 
     if (isEditMode) {
-      // ویرایش بیمار
       editPatient(patientData, {
         onSuccess: (updatedData: RegisterPatientResponse | null) => {
           if (updatedData && updatedData.data) { 
             handleSuccess(updatedData.data);
-            setIsSubmitting(false); 
-            toggleModal();
           } else {
-            setIsSubmitting(false); 
             toast.error("ویرایش اطلاعات بیمار ناموفق بود. لطفاً دوباره تلاش کنید.");
             console.log(updatedData?.data)
-          }
+                    }
+          setIsSubmitting(false);
         },
         onError: () => {
-          setIsSubmitting(false); 
           toast.error("خطا در ویرایش اطلاعات بیمار.");
+          setIsSubmitting(false);
         },
       });
     } else {
@@ -98,23 +99,18 @@ const CardexRegister = () => {
         onSuccess: (newData: RegisterPatientResponse | null) => {
           if (newData && newData.data) {  
             handleSuccess(newData.data);
-            setIsSubmitting(false); 
-            toast.success("ثبت بیمار با موفقیت انجام شد.");
-            console.log("newData:", newData.data);
           } else {
-            setIsSubmitting(false);
             toast.error("ثبت بیمار ناموفق بود. لطفاً دوباره تلاش کنید.");
-            console.log(newData?.data)
           }
+          setIsSubmitting(false);
         },
         onError: () => {
-          setIsSubmitting(false); 
           toast.error("خطا در ثبت بیمار.");
+          setIsSubmitting(false);
         },
       });
     }
   };
-  
 
   const openEditModal = (data: RegisterPatientData) => {
     setPatientData(data);
