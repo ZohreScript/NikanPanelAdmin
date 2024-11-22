@@ -4,7 +4,7 @@ import CustomSelectBox from "../../components/CustomSelectBox";
 type SelectBarProps = {
   yearOptions: number[];
   monthOptions: { label: string; value: number }[];
-  wardOptions: string[];
+  wardOptions: { label: string; value: number }[];
   isLoadingWards: boolean;
   onYearChange: (year: number) => void;
   onMonthChange: (monthValue: number) => void;

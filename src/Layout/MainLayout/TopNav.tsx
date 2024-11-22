@@ -33,19 +33,20 @@ const TopNav: React.FC = () => {
 
   const handleYearChange = (year: number) => {
     dispatch(setYear(year));
-    console.log(year);
-    console.log(yearOptions);
+    console.log("Selected Year:", year);
   };
 
   const handleMonthChange = (monthValue: number) => {
     dispatch(setMonth(monthValue));
-    console.log(monthValue);
-  };
+    console.log("Selected Month:", monthValue);  };
 
-  const handleWardChange = (ward: string) => {
-    dispatch(setWard(ward === 'همه' ?  '' : ward));
-  };
 
+
+  const handleWardChange = (wardId: string | number) => {
+    dispatch(setWard(wardId === "همه" ? "" : String(wardId))); // تبدیل به رشته
+    console.log("Selected Ward:", wardId);
+  };
+  
 
 
 
@@ -105,7 +106,10 @@ const TopNav: React.FC = () => {
         <SelectBar
           yearOptions={yearOptions}
           monthOptions={monthOptions}
-          wardOptions={wards?.map((ward) => ward.wardName) || []}
+          wardOptions={wards?.map((ward) => ({
+            label: ward.wardName,
+            value: ward.wardId,
+          })) || []}
           isLoadingWards={isLoadingWards}
           onYearChange={handleYearChange}
           onMonthChange={handleMonthChange}

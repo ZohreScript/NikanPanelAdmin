@@ -1,77 +1,81 @@
 import React, { useState, useEffect } from "react";
 import { useWardEvents } from "../../hooks/useWardEvents";
+import { useWardList } from "../../hooks/useWardList";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import RoomDetails from "./RoomDetails"; 
+import RoomDetails from "./RoomDetails";
 
 const DetailsParts: React.FC = () => {
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(10);
-  const [selectedWard, setSelectedWard] = useState<string | null>(null); 
+  const [selectedWard, setSelectedWard] = useState<string | null>(null);
   const { ward, year, month } = useSelector(
     (state: RootState) => state.selectedWard
   );
-  const { data, isLoading, error, refetch } = useWardEvents(
-    page,
-    count,
-    year,
-    month,
-    ward
+
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  // Make sure initial values are null, allowing the user to select them later
+  const {
+    data: wardEventsData,
+    isLoading,
+    error,
+    refetch,
+  } = useWardEvents(
+    1,
+    1000,
+    year ?? 0, 
+    month ?? 0,
+    ward,
+    isInitialLoad
   );
 
+  const { data: wardList, isLoading: isWardListLoading } = useWardList(true);
+
   const handleRoomDetailsClick = (wardName: string) => {
-    setSelectedWard(wardName); 
+    setSelectedWard(wardName);
   };
+
+  const wardEvents = wardEventsData?.wardEventsDetailes || [];
+
+  const wardIdToNameMap = wardList?.reduce(
+    (acc, ward) => ({ ...acc, [ward.wardId]: ward.wardName }), 
+    {}
+  );
+  
+
+  const enrichedWardEvents = wardEvents.map((event) => ({
+    ...event,
+    wardName: wardIdToNameMap ? event.wardName : event.wardName, // اصلاح نام بخش
+  }));
+  
+  const filteredWardEvents =
+    ward === null || ward === ""
+      ? enrichedWardEvents
+      : enrichedWardEvents.filter((wardEvent) => wardEvent.wardId === Number(ward)); // اصلاح شرط فیلتر
+  
+  useEffect(() => {
+    if (wardEventsData) {
+      setIsInitialLoad(false);
+    }
+  }, [wardEventsData]);
 
   useEffect(() => {
-    refetch();
-  }, [count, page, year, month, ward, refetch]);
+    if (!isInitialLoad) {
+      console.log("Fetching with filters:", { ward, year, month });
+      refetch();
+    }
+  }, [ward, year, month, refetch, isInitialLoad]);
 
-  const handleCountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCount(Number(e.target.value));
-    setPage(1);
-  };
-
-  const wardEvents = data?.wardEventsDetailes || [];
-  const total = data?.total || 0;
-  const totalPages = Math.ceil(total / count);
-  const dynamicHeight = `${Math.min(wardEvents.length, count) * 50}px`;
-
-  const filteredWardEvents = ward === null || ward === ""
-    ? wardEvents
-    : wardEvents.filter((wardEvent) => wardEvent.wardName === ward);
-
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading || isWardListLoading || isInitialLoad) return <p>Loading...</p>;
   if (error) return <p>Error loading data</p>;
 
   return (
     <div className="mt-2 p-6 grid grid-cols-1 gap-5">
-      <div className="flex justify-between items-center">
-        <select
-          value={count}
-          onChange={handleCountChange}
-          className="border p-2"
-        >
-          <option value={10}>10</option>
-          <option value={20}>20</option>
-          <option value={40}>40</option>
-          <option value={50}>50</option>
-        </select>
-        <p>
-          صفحه {page} از {totalPages}
-        </p>
-      </div>
-
       <div className="card flex flex-col bg-white w-full text-gray-600 p-4 shadow-2xl">
         <p className="text-lg text-gray-700 font-bold text-right mb-4 justify-end">
           جزییات بخش
         </p>
 
-        <div
-          className="overflow-y-auto"
-          style={{ height: dynamicHeight }}
-          dir="rtl"
-        >
+        <div className="overflow-y-auto" dir="rtl">
           <table className="w-full text-left text-gray-500">
             <thead className="mt-2 text-right">
               <tr>
@@ -129,32 +133,9 @@ const DetailsParts: React.FC = () => {
             </tbody>
           </table>
         </div>
-
-        <div className="flex justify-between items-center mt-4">
-          <button
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-            className="text-sm px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-          >
-            بعدی
-          </button>
-          <span>
-            صفحه {page} از {totalPages}
-          </span>
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-            className="text-sm px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
-          >
-            قبلی
-          </button>
-        </div>
       </div>
 
-      {/* نمایش کامپوننت RoomDetails به صورت شرطی */}
-      {selectedWard && (
-        <RoomDetails wardName={selectedWard} />
-      )}
+      {selectedWard && <RoomDetails wardName={selectedWard} />}
     </div>
   );
 };

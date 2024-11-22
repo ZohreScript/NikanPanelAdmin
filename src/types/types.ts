@@ -55,6 +55,7 @@ averageOfAnswerinSecond: number;
 }
 
 export interface WardEventsDetail {
+wardId: any;
 wardName: string;
 ring: number;
 staffRing: number;

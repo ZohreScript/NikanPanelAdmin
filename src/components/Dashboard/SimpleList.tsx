@@ -6,6 +6,8 @@ import { useExportFile } from "../../hooks/useExportFile";
 import { useWardEvents } from "../../hooks/useWardEvents";
 
 const SimpleList: React.FC = () => {
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(10);
   const [selectedFileType, setSelectedFileType] = useState<string>("");
   const { ward, year, month } = useSelector(
     (state: RootState) => state.selectedWard
@@ -20,30 +22,35 @@ const SimpleList: React.FC = () => {
   };
 
   const { mutate: exportData, isPending: isExporting } = useExportFile();
+  const { data, isLoading, error } = useWardEvents(
+    page,
+    count,
+    year ?? 0,
+    month ?? 0,
+    ward,
+    false
+  );
+
+  const total = data?.total || 0;
+  const totalPages = Math.ceil(total / count);
+
+  const handleCountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCount(Number(e.target.value));
+    setPage(1);
+  };
 
   const handleExport = () => {
     if (selectedFileType === "") {
       alert("لطفاً نوع فایل را انتخاب کنید.");
       return;
     }
-
     const exportType = exportMapping[selectedFileType];
-    exportData(exportType); 
+    exportData(exportType);
   };
 
   const handleSelectChange = (option: string) => {
     setSelectedFileType(option);
   };
-
-  const page = 1;
-  const count = 10;
-  const { data, isLoading, error } = useWardEvents(
-    page,
-    count,
-    year,
-    month,
-    ward
-  );
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading data</p>;
@@ -52,6 +59,23 @@ const SimpleList: React.FC = () => {
 
   return (
     <div className="mt-2 p-6 grid grid-cols-1 gap-5">
+      {/* کنترل‌ها */}
+      <div className="flex justify-between items-center">
+        <select
+          value={count}
+          onChange={handleCountChange}
+          className="border p-2"
+        >
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={40}>40</option>
+          <option value={50}>50</option>
+        </select>
+        <p>
+          صفحه {page} از {totalPages}
+        </p>
+      </div>
+      {/* لیست و جدول */}
       <div className="card flex flex-col bg-white w-full text-gray-600 p-4 shadow-2xl">
         <div className="flex flex-col md:flex-row md:justify-between items-center mb-4">
           <p className="text-xs md:text-lg md:hidden block text-gray-700 font-bold text-right">
@@ -144,6 +168,26 @@ const SimpleList: React.FC = () => {
             </tbody>
           </table>
         </div>
+      </div>
+      {/* کنترل‌های صفحه‌بندی */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+          className="text-sm px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          قبلی
+        </button>
+        <span>
+          صفحه {page} از {totalPages}
+        </span>
+        <button
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+          className="text-sm px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+        >
+          بعدی
+        </button>
       </div>
     </div>
   );
