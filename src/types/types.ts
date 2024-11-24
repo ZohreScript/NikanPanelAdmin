@@ -55,7 +55,7 @@ averageOfAnswerinSecond: number;
 }
 
 export interface WardEventsDetail {
-wardId: any;
+wardId: number;
 wardName: string;
 ring: number;
 staffRing: number;
@@ -142,7 +142,7 @@ export interface RegisterPatientData {
 }
 
 export interface RegisterPatientResponse {
-  result: boolean;
+  resualt: boolean;
   msg: string | null;
   data: RegisterPatientData;  }
 

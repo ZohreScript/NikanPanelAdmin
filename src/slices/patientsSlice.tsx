@@ -13,26 +13,29 @@ const initialState: PatientsState = {
 };
 
 const patientsSlice = createSlice({
-  name: 'patients',
+  name: "patients",
   initialState,
   reducers: {
-    setPatients: (state, action: PayloadAction<RegisterPatientData[]>) => {
-      state.patients = action.payload;
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload; // مقدار به‌روزرسانی می‌شود
     },
-    addPatient: (state, action: PayloadAction<RegisterPatientData>) => {
-      state.patients.push(action.payload);
+    addPatient(state, action: PayloadAction<RegisterPatientData>) {
+      state.patients.push(action.payload); // بیمار جدید اضافه می‌شود
     },
-    updatePatient: (state, action: PayloadAction<RegisterPatientData>) => {
-      const index = state.patients.findIndex(patient => patient.no_pazir === action.payload.no_pazir);
+    updatePatient(state, action: PayloadAction<RegisterPatientData>) {
+
+      console.log("Data received in updatePatient action:", action.payload);
+      const index = state.patients.findIndex(p => p.id === action.payload.id);
       if (index !== -1) {
+        console.log("Previous data:", state.patients[index]);
+        console.log("Updated data:", action.payload);
         state.patients[index] = action.payload;
       }
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
+    }
+
+    
   },
 });
 
-export const { setPatients, addPatient, updatePatient, setLoading } = patientsSlice.actions;
+export const {  addPatient, updatePatient, setLoading } = patientsSlice.actions;
 export default patientsSlice.reducer;

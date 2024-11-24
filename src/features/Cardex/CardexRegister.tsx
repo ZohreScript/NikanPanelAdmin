@@ -1,5 +1,5 @@
 // src/components/CardexRegister.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPatient, updatePatient, setLoading } from '../../slices/patientsSlice';
 import { RegisterPatientData, RegisterPatientResponse } from '../../types/types';
@@ -43,50 +43,41 @@ const initialPatientData: RegisterPatientData = {
 const CardexRegister = () => {
   const [patientData, setPatientData] = useState<RegisterPatientData>(initialPatientData);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
 
   const dispatch = useDispatch();
   const patients = useSelector((state: RootState) => state.patients.patients);
 
   const { mutate } = useRegisterPatient();
-  const { mutate: editPatient } = useUpdatePatientMutation();
+  const { mutate: editPatient } = useUpdatePatientMutation(patientData);
   const { data: patientInfos, refetch } = usePatientInformations(1, 10);
 
   const toggleModal = () => setModalOpen(!isModalOpen);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setPatientData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   setPatientData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
 
-  const handleSuccess = (newPatientData: RegisterPatientData) => {
+  const handleSubmit = (data: RegisterPatientData) => {
+    console.log("Submitted data from modal:", data); // داده‌های جدید
+    setIsSubmitting(true);
+    dispatch(setLoading(true));
     if (isEditMode) {
-      dispatch(updatePatient(newPatientData));
-      toast.success("اطلاعات بیمار با موفقیت ویرایش شد.");
-    } else {
-      dispatch(addPatient(newPatientData));
-      toast.success("بیمار جدید با موفقیت ثبت شد.");
-    }
-    refetch();
-    toggleModal();
-  };
-
-  const handleSubmit = () => {
-    setIsSubmitting(true); 
-    dispatch(setLoading(true)); 
-    if (isEditMode) {
-      editPatient(patientData, {
-        onSuccess: (updatedData: RegisterPatientResponse | null) => {
-          if (updatedData && updatedData.data) { 
-            handleSuccess(updatedData.data);
+      editPatient(data, { // اینجا باید `data` استفاده شود
+        onSuccess: (response: RegisterPatientResponse | null) => {
+          if (response?.resualt === true) { 
+            handleSuccess(data); // مقدار ویرایش‌شده
+            toast.success("اطلاعات بیمار با موفقیت ویرایش شد.");
+            console.log("Response Data:", response);
           } else {
-            toast.error("ویرایش اطلاعات بیمار ناموفق بود. لطفاً دوباره تلاش کنید.");
-            console.log(updatedData?.data)
-                    }
+            console.log("Response Data:false", response);
+            toast.error(response?.msg || "ویرایش اطلاعات بیمار ناموفق بود.");
+          }
           setIsSubmitting(false);
         },
         onError: () => {
@@ -95,12 +86,15 @@ const CardexRegister = () => {
         },
       });
     } else {
-      mutate(patientData, {
-        onSuccess: (newData: RegisterPatientResponse | null) => {
-          if (newData && newData.data) {  
-            handleSuccess(newData.data);
+      mutate(data, { // اینجا هم مقدار `data` برای ثبت بیمار جدید
+        onSuccess: (response: RegisterPatientResponse | null) => {
+          if (response?.resualt === true) { 
+            toast.success("بیمار جدید با موفقیت ثبت شد.");
+            handleSuccess(data); // مقدار جدید ثبت‌شده
+            console.log("Response Data:", data);
           } else {
-            toast.error("ثبت بیمار ناموفق بود. لطفاً دوباره تلاش کنید.");
+            toast.error(response?.msg || "ثبت مشخصات بیمار ناموفق بود.");
+            console.log("Response Data:", response);
           }
           setIsSubmitting(false);
         },
@@ -111,8 +105,30 @@ const CardexRegister = () => {
       });
     }
   };
+  
+
+  const handleSuccess = (newPatientData: RegisterPatientData) => {
+    console.log("Data received in handleSuccess:", newPatientData);
+    if (isEditMode) {
+      dispatch(updatePatient(newPatientData));
+      console.log("update",newPatientData)
+      console.log( dispatch(updatePatient(newPatientData)));
+
+    } else {
+      dispatch(addPatient(newPatientData));
+    }
+    refetch();
+    toggleModal();
+  };
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      refetch(); 
+    }
+  }, [isSubmitting, refetch]);
 
   const openEditModal = (data: RegisterPatientData) => {
+    console.log("Opening edit modal with data:", data);
     setPatientData(data);
     setEditMode(true);
     setModalOpen(true);
@@ -145,8 +161,8 @@ const CardexRegister = () => {
           patientData={patientData}
           isEditMode={isEditMode}
           onClose={toggleModal}
-          onSubmit={handleSubmit}
-          onChange={handleChange}
+          onSubmitmodal={handleSubmit}
+          // onChange={handleChange}
           existingPatients={patients}
         />
       </div>

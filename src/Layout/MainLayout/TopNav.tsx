@@ -40,12 +40,11 @@ const TopNav: React.FC = () => {
     dispatch(setMonth(monthValue));
     console.log("Selected Month:", monthValue);  };
 
-
-
-  const handleWardChange = (wardId: string | number) => {
-    dispatch(setWard(wardId === "همه" ? "" : String(wardId))); // تبدیل به رشته
-    console.log("Selected Ward:", wardId);
+  const handleWardChange = (ward: string) => {
+    dispatch(setWard(ward === "همه" ? "" : ward));
+    console.log("Selected Ward:", ward);
   };
+
   
 
 

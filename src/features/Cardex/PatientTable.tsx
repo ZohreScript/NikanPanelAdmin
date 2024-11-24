@@ -138,7 +138,7 @@ const PatientTable: React.FC<PatientTableProps> = ({ openEditModal }) => {
               {patientdetails.map((patient, index) => (
                 <tr
                   key={index}
-                  className="border-b border-gray-200 text-center"
+                  className="border-b border-gray-200 text-center hover:bg-blue-100" 
                 >
                   <td className="py-4 px-0.5 text-sm font-bold text-navy-700">
                     {index + 1 + (page - 1) * count}
