@@ -34,7 +34,7 @@ const componentMapping: Record<string, JSX.Element> = {
   'setting/ehzar/rfid': <SettingEhzarRfid />,
   'setting/ehzar/wards': <SettingEhzarWards />,
   'setting/ehzar/Code': <Code />,
-  'setting/cardex/updown': <Updown />,
+  'setting/ehzar/updown': <Updown />,
   'setting/cardex/wards': <Dastband />,
   'setting/cardex/fracture_type': <FractureType />,
   'setting/cardex/safeLevel': <SafeLevel />,

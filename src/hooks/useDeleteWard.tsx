@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import {  wardService } from "../Services/HttpService";
+import { wardService } from "../Services/HttpService";
 
 export interface DeleteSettingsData {
-  id: number; 
+  id: number;
 }
 
 export interface DeleteSettingsResponse {
@@ -14,10 +14,9 @@ export const useDeleteSettings = () => {
   return useMutation<DeleteSettingsResponse, Error, DeleteSettingsData>({
     mutationFn: async (data: DeleteSettingsData) => {
       const response = await wardService.delete("/nurse/deleteward", {
-        data, 
+        data,
       });
-
-      return response.data; 
+      return response.data;
     },
   });
 };
