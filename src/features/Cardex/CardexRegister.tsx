@@ -55,14 +55,6 @@ const CardexRegister = () => {
 
   const toggleModal = () => setModalOpen(!isModalOpen);
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-  //   const { name, value } = e.target;
-  //   setPatientData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
-
   const handleSubmit = (data: RegisterPatientData) => {
     console.log("Submitted data from modal:", data); // داده‌های جدید
     setIsSubmitting(true);

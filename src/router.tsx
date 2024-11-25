@@ -24,6 +24,8 @@ import AccessPermission from './features/Access/AccessPermission';
 import Dashboard from './features/Dashboard/Dashboard';
 import Ehzar from './features/EhzarNurse/Ehzar';
 import { MenuItem } from './types/types'; // Import the MenuItem type
+import Code from './features/Setting/Code';
+import Updown from './features/Setting/Updown';
 
 const componentMapping: Record<string, JSX.Element> = {
   '': <Dashboard/>,
@@ -31,6 +33,8 @@ const componentMapping: Record<string, JSX.Element> = {
   'cardex/register': <CardexRegister />,
   'setting/ehzar/rfid': <SettingEhzarRfid />,
   'setting/ehzar/wards': <SettingEhzarWards />,
+  'setting/ehzar/Code': <Code />,
+  'setting/cardex/updown': <Updown />,
   'setting/cardex/wards': <Dastband />,
   'setting/cardex/fracture_type': <FractureType />,
   'setting/cardex/safeLevel': <SafeLevel />,

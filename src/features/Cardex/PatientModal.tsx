@@ -7,6 +7,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { RegisterPatientData } from "../../types/types";
 import { utils } from "react-modern-calendar-datepicker";
+import { useDataSettings } from "../../hooks/useDataSettings";
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -49,6 +50,8 @@ const PatientModal: React.FC<PatientModalProps> = ({
     }
   }, [isOpen, patientData, setValue]);
 
+  const { data: braceelet } = useDataSettings(0, 0);
+console.log("braceelet",braceelet)
   // هندل تغییر تاریخ
   const handleDateChange = (date: any) => {
     const formattedDate = date?.format("YYYY/MM/DD"); // تبدیل به فرمت رشته
@@ -410,26 +413,36 @@ const PatientModal: React.FC<PatientModalProps> = ({
               {/* دستبند */}
               <label className="label">دستبند</label>
               <select
-                {...register("braceelet", {
-                  required: "انتخاب دستبند الزامی است",
-                })}
-                className={`select select-bordered w-full ${
-                  errors.braceelet ? "border-red-500" : ""
-                }`}
-              >
-                <option value="">لطفاً انتخاب کنید</option>
-                <option value="0">بدون دستبند</option>
-                <option value="1">قرمز</option>
-                <option value="2">زرد</option>
-              </select>
-              {errors.braceelet && (
-                <span className="text-red-500 text-sm">
-                  {errors.braceelet.message}
-                </span>
-              )}
+        {...register("braceelet", {
+          required: "انتخاب دستبند الزامی است",
+        })}
+        className={`select select-bordered w-full ${
+          errors.braceelet ? "border-red-500" : ""
+        }`}
+      >
+        <option value="">لطفاً انتخاب کنید</option>
+        {braceelet?.map((item) => (
+            <option key={item.id} value={item.value}>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-1 h-1 inline-block"
+                  style={{
+                    backgroundColor: `rgb(${(item.color >> 16) & 255}, ${
+                      (item.color >> 8) & 255
+                    }, ${item.color & 255})`,
+                  }}
+                ></div>
+                {item.value}
+              </div>
+            </option>
+          ))}
+      </select>
+      {errors.braceelet && (
+        <span className="text-red-500 text-sm">{errors.braceelet.message}</span>
+      )}
 
               {/* time-j */}
-              <label className="label">time-j</label>
+              <label className="label">مدت بستری</label>
               <input
                 type="text"
                 {...register("time_j", { required: "time-j الزامی است" })}
