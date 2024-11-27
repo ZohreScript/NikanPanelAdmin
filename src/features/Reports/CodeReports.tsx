@@ -1,5 +1,9 @@
+import EhzarReports from "./EhzarReports";
+
 const CodeReports = () => {
-    return <div>CodeReports</div>;
+    return <>
+    <EhzarReports statusFilter={204} />
+    </>;
   };
   
   export default CodeReports;

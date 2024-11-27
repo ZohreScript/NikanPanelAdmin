@@ -1,5 +1,8 @@
+import EhzarReports from "./EhzarReports";
+
 const EhzarFailure = () => {
-    return ( <div>EhzarFailure</div> );
-}
+    return <>
+    <EhzarReports statusFilter={90} />
+    </>;}
  
 export default EhzarFailure;

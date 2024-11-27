@@ -15,7 +15,6 @@ import Name from './features/Setting/Name';
 import DashboardEhzar from './features/Dashboard/DashboardEhzar';
 import DashboardCardex from './features/Dashboard/DashboardCardex';
 import CodeReports from './features/Reports/CodeReports';
-import EhzarFailure from './features/Reports/EhzarFailure';
 import EhzarReports from './features/Reports/EhzarReports';
 import AccessRegister from './features/Access/AccessRegister';
 import AccessAuthorizeDevice from './features/Access/AccessAuthorizeDevice';
@@ -44,7 +43,6 @@ const componentMapping: Record<string, JSX.Element> = {
   'dashbord/cardex': <DashboardCardex />,
   'code/reports': <CodeReports />,
   'ehzar/reports': <EhzarReports />,
-  'ehzar/failure': <EhzarFailure />,
   'access/register': <AccessRegister />,
   'access/authorizDevice': <AccessAuthorizeDevice />,
   'access/Roll': <AccessRoll />,

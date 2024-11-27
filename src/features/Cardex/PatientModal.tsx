@@ -51,7 +51,8 @@ const PatientModal: React.FC<PatientModalProps> = ({
   }, [isOpen, patientData, setValue]);
 
   const { data: braceelet } = useDataSettings(0, 0);
-console.log("braceelet",braceelet)
+  const { data: movementStatus } = useDataSettings(4, 0);
+  const { data: fractureType } = useDataSettings(1, 0);
   // هندل تغییر تاریخ
   const handleDateChange = (date: any) => {
     const formattedDate = date?.format("YYYY/MM/DD"); // تبدیل به فرمت رشته
@@ -377,15 +378,21 @@ console.log("braceelet",braceelet)
 
               {/* وضعیت حرکت */}
               <label className="label">وضعیت حرکت</label>
-              <input
-                type="text"
+              <select
                 {...register("movement_Status", {
-                  required: "وضعیت حرکت الزامی است",
+                  required: "انتخاب وضعیت حرکت الزامی است",
                 })}
-                className={`input input-bordered w-full ${
+                className={`select select-bordered w-full ${
                   errors.movement_Status ? "border-red-500" : ""
                 }`}
-              />
+              >
+                <option value="">لطفاً انتخاب کنید</option>
+                {movementStatus?.map((item) => (
+                  <option key={item.id} value={item.value}>
+                    {item.value}
+                  </option>
+                ))}
+              </select>
               {errors.movement_Status && (
                 <span className="text-red-500 text-sm">
                   {errors.movement_Status.message}
@@ -394,16 +401,21 @@ console.log("braceelet",braceelet)
 
               {/* نوع شکستگی */}
               <label className="label">نوع شکستگی</label>
-              <input
-                type="number"
+              <select
                 {...register("fracture_Type", {
-                  required: "نوع شکستگی الزامی است",
-                  valueAsNumber: true,
+                  required: "انتخاب نوع شکستگی الزامی است",
                 })}
-                className={`input input-bordered w-full ${
+                className={`select select-bordered w-full ${
                   errors.fracture_Type ? "border-red-500" : ""
                 }`}
-              />
+              >
+                <option value="">لطفاً انتخاب کنید</option>
+                {fractureType?.map((item) => (
+                  <option key={item.id} value={item.value}>
+                    {item.value}
+                  </option>
+                ))}
+              </select>
               {errors.fracture_Type && (
                 <span className="text-red-500 text-sm">
                   {errors.fracture_Type.message}

@@ -6,10 +6,11 @@ import { useQuery } from '@tanstack/react-query';
 const fetchWardEventsDetails = async (
   page: number,
   count: number,
-  year:  number | null,
-  month:  number | null,
+  year: number | null,
+  month: number | null,
   wardName: string,
-  isInitialLoad: boolean 
+  isInitialLoad: boolean,
+  status?: number // Optional status filter
 ): Promise<ResponseData> => {
   try {
     const filter: any = {};
@@ -18,6 +19,7 @@ const fetchWardEventsDetails = async (
       if (year) filter.year = year;
       if (month) filter.month = month;
       if (wardName) filter.wardId = Number(wardName) || 0;
+      if (status !== undefined) filter.status = status; // Add status if provided
     }
 
     const filterToSend = Object.keys(filter).length > 0 ? filter : undefined;
@@ -27,7 +29,7 @@ const fetchWardEventsDetails = async (
       {
         page,
         count,
-        filter: filterToSend, 
+        filter: filterToSend,
         getWardDetail: true,
         getRoomDetail: true,
         myVersion: 'f1.0.1',
@@ -39,7 +41,6 @@ const fetchWardEventsDetails = async (
       }
     );
 
-    console.log('Payload sent to API:', { page, count, filter: filterToSend });
     return response.data;
   } catch (error) {
     console.error('Error fetching ward events:', error);
@@ -47,18 +48,19 @@ const fetchWardEventsDetails = async (
   }
 };
 
-
-
 export const useWardEvents = (
   page: number,
   count: number = 10,
   year: number,
   month: number,
   wardName: string,
-  isInitialLoad: boolean // Track whether it's the initial load
+  isInitialLoad: boolean,
+  status?: number // Optional status filter
 ) => {
   return useQuery<ResponseData, Error>({
-    queryKey: ['wardEvents', page, count, year, month, wardName],
-    queryFn: () => fetchWardEventsDetails(page, count, year, month, wardName, isInitialLoad),
+    queryKey: ['wardEvents', page, count, year, month, wardName, status],
+    queryFn: () =>
+      fetchWardEventsDetails(page, count, year, month, wardName, isInitialLoad, status),
   });
 };
+
