@@ -10,16 +10,16 @@ const fetchWardEventsDetails = async (
   month: number | null,
   wardName: string,
   isInitialLoad: boolean,
-  status?: number // Optional status filter
+  status?: number
 ): Promise<ResponseData> => {
   try {
     const filter: any = {};
 
     if (!isInitialLoad) {
-      if (year) filter.year = year;
-      if (month) filter.month = month;
+      if (year) filter.year = year ?? 0;
+      if (month) filter.month = month ?? 0;
       if (wardName) filter.wardId = Number(wardName) || 0;
-      if (status !== undefined) filter.status = status; // Add status if provided
+      if (status !== undefined) filter.status = status; 
     }
 
     const filterToSend = Object.keys(filter).length > 0 ? filter : undefined;
@@ -51,11 +51,11 @@ const fetchWardEventsDetails = async (
 export const useWardEvents = (
   page: number,
   count: number = 10,
-  year: number,
-  month: number,
+  year: number | null,
+  month: number | null,
   wardName: string,
   isInitialLoad: boolean,
-  status?: number // Optional status filter
+  status?: number 
 ) => {
   return useQuery<ResponseData, Error>({
     queryKey: ['wardEvents', page, count, year, month, wardName, status],

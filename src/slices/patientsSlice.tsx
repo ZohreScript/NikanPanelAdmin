@@ -1,9 +1,9 @@
 // src/redux/patientsSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RegisterPatientData } from '../types/types';
+import { PatientInfo } from '../types/types';
 
 interface PatientsState {
-  patients: RegisterPatientData[];
+  patients: PatientInfo[];
   isLoading: boolean;
 }
 
@@ -19,10 +19,10 @@ const patientsSlice = createSlice({
     setLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload; // مقدار به‌روزرسانی می‌شود
     },
-    addPatient(state, action: PayloadAction<RegisterPatientData>) {
+    addPatient(state, action: PayloadAction<PatientInfo>) {
       state.patients.push(action.payload); // بیمار جدید اضافه می‌شود
     },
-    updatePatient(state, action: PayloadAction<RegisterPatientData>) {
+    updatePatient(state, action: PayloadAction<PatientInfo>) {
 
       console.log("Data received in updatePatient action:", action.payload);
       const index = state.patients.findIndex(p => p.id === action.payload.id);

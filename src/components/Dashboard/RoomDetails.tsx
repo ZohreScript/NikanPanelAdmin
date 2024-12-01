@@ -9,9 +9,10 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ wardName }) => {
   const { data, isLoading, error } = useWardEvents(
     1,
     10,
-    new Date().getFullYear(),
-    new Date().getMonth() + 1,
-    wardName
+    null,
+    null,
+    wardName,
+    false // مقداردهی `isInitialLoad`
   );
 
   const roomDetails = data?.wardEventsDetailes?.[0]?.roomDetail || [];
@@ -21,9 +22,9 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ wardName }) => {
 
   return (
     <div className="card flex flex-col bg-white w-full text-gray-600 p-4 mt-8 shadow-2xl">
-    <p className="text-lg text-gray-700 font-bold text-right mb-4 justify-end">
-      جزییات اتاق
-    </p>
+      <p className="text-lg text-gray-700 font-bold text-right mb-4 justify-end">
+        جزییات اتاق
+      </p>
       <div className="overflow-y-auto" dir="rtl">
         <table className="w-full text-left text-gray-500">
           <thead className="mt-2 text-right">
@@ -42,9 +43,6 @@ const RoomDetails: React.FC<RoomDetailsProps> = ({ wardName }) => {
               </th>
               <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
                 میانگین پاسخ دهی
-              </th>
-              <th className="border-b border-gray-200 pr-8 pb-2 text-sm font-bold tracking-wide text-gray-400">
-                جزئیات
               </th>
             </tr>
           </thead>

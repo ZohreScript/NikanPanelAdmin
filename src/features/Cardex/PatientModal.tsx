@@ -5,17 +5,17 @@ import { useForm } from "react-hook-form";
 import DatePicker from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import { RegisterPatientData } from "../../types/types";
+import { PatientInfo } from "../../types/types";
 import { utils } from "react-modern-calendar-datepicker";
 import { useDataSettings } from "../../hooks/useDataSettings";
 
 interface PatientModalProps {
   isOpen: boolean;
-  patientData: RegisterPatientData;
+  patientData: PatientInfo;
   isEditMode: boolean;
   onClose: () => void;
-  onSubmitmodal: (data: RegisterPatientData) => void;
-  existingPatients: RegisterPatientData[];
+  onSubmitmodal: (data: PatientInfo) => void;
+  existingPatients: PatientInfo[];
 }
 
 const PatientModal: React.FC<PatientModalProps> = ({
@@ -31,7 +31,7 @@ const PatientModal: React.FC<PatientModalProps> = ({
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterPatientData>({
+  } = useForm<PatientInfo>({
     defaultValues: patientData,
   });
 
@@ -45,7 +45,7 @@ const PatientModal: React.FC<PatientModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       Object.entries(patientData).forEach(([key, value]) => {
-        setValue(key as keyof RegisterPatientData, value);
+        setValue(key as keyof PatientInfo, value);
       });
     }
   }, [isOpen, patientData, setValue]);
@@ -67,7 +67,7 @@ const PatientModal: React.FC<PatientModalProps> = ({
     );
   };
 
-  const onSubmit = (data: RegisterPatientData) => {
+  const onSubmit = (data: PatientInfo) => {
     onSubmitmodal({ ...data, bast_date: selectedDate || "" }); // ارسال داده با تاریخ انتخابی
     onClose();
   };

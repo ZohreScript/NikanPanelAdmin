@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
-import { RegisterPatientData, RegisterPatientResponse } from '../types/types';
+import { PatientInfo, RegisterPatientResponse } from '../types/types';
 import { patientService } from '../Services/HttpService';
 
-const useUpdatePatientMutation = (patientData: RegisterPatientData) => {
-  return useMutation<RegisterPatientResponse, Error, RegisterPatientData>({
+const useUpdatePatientMutation = (patientData: PatientInfo) => {
+  return useMutation<RegisterPatientResponse, Error, PatientInfo>({
     
-    mutationFn: async (data: RegisterPatientData) => {
+    mutationFn: async (data: PatientInfo) => {
       console.log("Sending data to API:", patientData);
       const response = await patientService.put("/patientinfo/updatepatientinformation", data);
       console.log("Response from API:", response.data);

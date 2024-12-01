@@ -25,6 +25,7 @@ import Ehzar from './features/EhzarNurse/Ehzar';
 import { MenuItem } from './types/types'; // Import the MenuItem type
 import Code from './features/Setting/Code';
 import Updown from './features/Setting/Updown';
+import UpdownPatient from './features/Setting/UpdownPatient';
 
 const componentMapping: Record<string, JSX.Element> = {
   '': <Dashboard/>,
@@ -34,6 +35,7 @@ const componentMapping: Record<string, JSX.Element> = {
   'setting/ehzar/wards': <SettingEhzarWards />,
   'setting/ehzar/Code': <Code />,
   'setting/ehzar/updown': <Updown />,
+  'setting/cardex/updown': <UpdownPatient/>,
   'setting/cardex/wards': <Dastband />,
   'setting/cardex/fracture_type': <FractureType />,
   'setting/cardex/safeLevel': <SafeLevel />,

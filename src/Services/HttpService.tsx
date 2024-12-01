@@ -7,6 +7,7 @@ import axios, {
 const AUTH_BASE_URL = "http://93.118.144.59:8003/api/v1";
 const WARD_BASE_URL = "http://93.118.144.59:8002/api/v1";
 const PATIENT_BASE_URL = "http://93.118.144.59:8001/api/v1";
+const UPDOWN_BASE_URL="http://93.118.144.59:8000/api/v1";
 
 export const authService = axios.create({
   baseURL: AUTH_BASE_URL,
@@ -16,9 +17,17 @@ export const wardService = axios.create({
   baseURL: WARD_BASE_URL,
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const patientService = axios.create({
   baseURL: PATIENT_BASE_URL,
 });
+
+export const UpDownService = axios.create({
+  baseURL: UPDOWN_BASE_URL,
+});
+
+
+
 
 // Request interceptor to add token to headers
 authService.interceptors.request.use(

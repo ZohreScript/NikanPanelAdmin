@@ -13,7 +13,6 @@ const DetailsParts: React.FC = () => {
 
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Make sure initial values are null, allowing the user to select them later
   const {
     data: wardEventsData,
     isLoading,
@@ -33,6 +32,7 @@ const DetailsParts: React.FC = () => {
   const handleRoomDetailsClick = (wardName: string) => {
     setSelectedWard(wardName);
   };
+  
 
   const wardEvents = wardEventsData?.wardEventsDetailes || [];
 

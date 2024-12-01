@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { usePatientInformations } from "../../hooks/usePatientInformations";
 import { BsThreeDots } from "react-icons/bs";
-import { RegisterPatientData } from "../../types/types";
+import { PatientInfo } from "../../types/types";
 
 interface PatientTableProps {
-  openEditModal: (patientData: RegisterPatientData) => void;
-  patients: RegisterPatientData[]; 
+  openEditModal: (patientData: PatientInfo) => void;
+  patients: PatientInfo[]; 
 
 }
 

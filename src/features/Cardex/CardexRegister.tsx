@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPatient, updatePatient, setLoading } from '../../slices/patientsSlice';
-import { RegisterPatientData, RegisterPatientResponse } from '../../types/types';
+import { PatientInfo, RegisterPatientResponse } from '../../types/types';
 import PatientTable from './PatientTable';
 import PatientModal from './PatientModal';
 import "react-toastify/dist/ReactToastify.css";
@@ -12,7 +12,7 @@ import useUpdatePatientMutation from '../../hooks/useEditPatient';
 import { usePatientInformations } from '../../hooks/usePatientInformations';
 import { RootState } from '../../store/store';
 
-const initialPatientData: RegisterPatientData = {
+const initialPatientData: PatientInfo = {
   no_pazir: '',
   id: 0,
   name_b: '',
@@ -41,7 +41,7 @@ const initialPatientData: RegisterPatientData = {
 };
 
 const CardexRegister = () => {
-  const [patientData, setPatientData] = useState<RegisterPatientData>(initialPatientData);
+  const [patientData, setPatientData] = useState<PatientInfo>(initialPatientData);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
@@ -55,7 +55,7 @@ const CardexRegister = () => {
 
   const toggleModal = () => setModalOpen(!isModalOpen);
 
-  const handleSubmit = (data: RegisterPatientData) => {
+  const handleSubmit = (data: PatientInfo) => {
     console.log("Submitted data from modal:", data); // داده‌های جدید
     setIsSubmitting(true);
     dispatch(setLoading(true));
@@ -99,7 +99,7 @@ const CardexRegister = () => {
   };
   
 
-  const handleSuccess = (newPatientData: RegisterPatientData) => {
+  const handleSuccess = (newPatientData: PatientInfo) => {
     console.log("Data received in handleSuccess:", newPatientData);
     if (isEditMode) {
       dispatch(updatePatient(newPatientData));
@@ -119,7 +119,7 @@ const CardexRegister = () => {
     }
   }, [isSubmitting, refetch]);
 
-  const openEditModal = (data: RegisterPatientData) => {
+  const openEditModal = (data: PatientInfo) => {
     console.log("Opening edit modal with data:", data);
     setPatientData(data);
     setEditMode(true);
